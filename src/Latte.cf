@@ -1,0 +1,167 @@
+-- programs ------------------------------------------------
+
+entrypoints Program ;
+
+Prog.    Program ::= [TopDef] ;
+
+FnDef.      TopDef ::= Type Ident "(" [Arg] ")" Block ;
+
+ClassDefNoInher.      TopDef ::= "class" Ident "{" [ ClassInstr ] "}" ;
+
+ClassDefInher.        TopDef ::= "class" Ident "extends" Ident "{" [ ClassInstr ] "}" ; 
+
+separator nonempty TopDef "" ;
+
+Ar.   Arg ::= Type Ident;
+
+separator   Arg "," ;
+
+MethodDef.  ClassInstr ::= Type Ident "(" [Arg] ")" Block ;
+
+FieldDef.   ClassInstr ::= Type Ident ";" ;
+
+separator ClassInstr "" ;
+
+
+-- statements ----------------------------------------------
+
+Blk.   Block ::= "{" [Stmt] "}" ;
+
+separator   Stmt "" ;
+
+Empty.   Stmt ::= ";" ;
+
+BStmt.   Stmt ::= Block ;
+
+Decl.    Stmt ::= Type [Item] ";" ;
+
+NoInit.      Item ::= Ident ; 
+
+Init.        Item ::= Ident "=" Expr ;
+
+InitArray.   Item ::= Ident "=" "new" Type "[" Expr "]" ;
+
+InitObj.     Item ::= Ident "=" "new" Type ;
+
+separator nonempty Item "," ;   
+
+SingleIdent.    LatteIdent ::= Ident ;
+
+ArrayIdent.     LatteIdent ::= Ident "[" Expr "]" ;
+
+SelfIdent.      LatteIdent ::= "self" ;
+
+separator nonempty LatteIdent "."  ;
+
+
+-- The trick with LatteIdent represented as a list is to treat fields retrievals 
+-- as a dot-separable content. For example square.width = 7;
+
+Ass.     Stmt ::= [LatteIdent] "=" Expr  ";" ;
+
+AssArr.  Stmt ::= [LatteIdent] "=" "new" Type "[" Expr "]" ;
+
+AssObj.  Stmt ::= [LatteIdent] "=" "new" Type ;
+
+Incr.    Stmt ::= [LatteIdent] "++"  ";" ;
+
+Decr.    Stmt ::= [LatteIdent] "--"  ";" ;
+
+Ret.     Stmt ::= "return" Expr ";" ;
+
+VRet.    Stmt ::= "return" ";" ;
+
+Cond.    Stmt ::= "if" "(" Expr ")" Stmt  ;
+
+CondElse.  Stmt ::= "if" "(" Expr ")" Stmt "else" Stmt  ;
+
+While.   Stmt ::= "while" "(" Expr ")" Stmt ;
+
+Foreach. Stmt ::= "for" "(" Type Ident ":" [LatteIdent] ")" Stmt ;
+
+SExp.    Stmt ::= Expr  ";" ;
+
+-- Types ---------------------------------------------------
+
+Class.     Type ::= Ident ;
+
+Int.       Type ::= "int" ;
+
+Str.       Type ::= "string" ;
+
+Bool.      Type ::= "boolean" ;
+
+Void.      Type ::= "void" ;
+
+ArrayType.     Type ::= Type "[" "]" ;
+
+-- Expressions ---------------------------------------------
+
+EVar.      Expr6 ::= [LatteIdent] ;
+
+ELitInt.   Expr6 ::= Integer ;
+
+ELitFalse. Expr6 ::= "false" ;
+
+ELitNull.  Expr6 ::= "null" ;
+
+ELitTrue.  Expr6 ::= "true" ;
+
+EApp.      Expr6 ::= Ident "(" [Expr] ")" ;
+
+EInstanceApp. Expr6 ::= [LatteIdent] "(" [Expr] ")" ;
+
+EString.   Expr6 ::= String ;
+
+Neg.       Expr5 ::= "-" Expr6 ;
+
+Not.       Expr5 ::= "!" Expr6 ;
+
+ECast.     Expr5 ::= "(" Ident ")" Expr6 ;
+
+EMul.      Expr4 ::= Expr4 MulOp Expr5 ;
+
+EAdd.      Expr3 ::= Expr3 AddOp Expr4 ;
+
+ERel.      Expr2 ::= Expr2 RelOp Expr3 ;
+
+EAnd.      Expr1 ::= Expr2 "&&" Expr1 ;
+
+EOr.       Expr ::= Expr1 "||" Expr ;
+
+coercions  Expr 6 ;
+
+separator  Expr "," ;
+
+-- operators -----------------------------------------------
+
+Plus.      AddOp ::= "+" ;
+
+Minus.     AddOp ::= "-" ;
+
+Times.     MulOp ::= "*" ;
+
+Div.       MulOp ::= "/" ;
+
+Mod.       MulOp ::= "%" ;
+
+LTH.       RelOp ::= "<" ;
+
+LE.        RelOp ::= "<=" ;
+
+GTH.       RelOp ::= ">" ;
+
+GE.        RelOp ::= ">=" ;
+
+EQU.       RelOp ::= "==" ;
+
+NE.        RelOp ::= "!=" ;
+
+-- comments ------------------------------------------------
+
+comment    "#" ;
+
+comment    "//" ;
+
+comment    "/*" "*/" ;
+
