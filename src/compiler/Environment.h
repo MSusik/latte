@@ -13,11 +13,15 @@ using namespace std;
 
 class Environment {
 public:
+    Environment();
+    Environment(map<string, pair<Type*, bool>> p);
     bool is_variable_declared(string variable);
+    bool is_variable_declared_here(string variable);
     void add_variable(string name, Type *type);
     Type *get_type(string name);
+    map<string, pair<Type*, bool>> get_previous();
 private:
-    map<string, Type*> declared_variables; //name->type
+    map<string, pair<Type*, bool>> declared_variables; //name->type
 };
 
 

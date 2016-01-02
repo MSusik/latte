@@ -14,6 +14,7 @@
 #include "Skeleton.H"
 #include "CorrectnessChecker.H"
 #include "FunctionRetriever.h"
+#include "Compiler.h"
 
 using std::cerr;
 using std::cout;
@@ -76,7 +77,13 @@ int main(int argc, char ** argv) {
 
     string parent_path = path.parent_path().string();
     string filename = path.stem().string();
-    string full_without_extension = parent_path + "/" + filename;
+    string full_without_extension;
+    if(parent_path.size()) {
+        full_without_extension = parent_path + "/" + filename;
+    }
+    else {
+        full_without_extension = "./" + filename;
+    }
 
     Prog *parse_tree = static_cast<Prog*>(pProgram(input));
 
@@ -99,13 +106,14 @@ int main(int argc, char ** argv) {
         }
         else
         {
-            //Skeleton s;
-            //s.visitProg(parse_tree);
+            string assembly_file_name = full_without_extension + ".s";
+            Compiler compiler(functions, assembly_file_name);
+            compiler.generate();
 
-            create_stub(full_without_extension);
+            //create_stub(full_without_extension);
 
             // name?
-            compile_target(full_without_extension, argv[0]);
+            //compile_target(full_without_extension, argv[0]);
 
             cerr << "OK" << endl;
             flush(cerr);

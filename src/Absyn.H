@@ -251,7 +251,11 @@ public:
 class Stmt : public Visitable
 {
 public:
-    virtual bool simple() {return false;}
+    virtual BStmt *getBlock(){return nullptr;};
+    virtual CondElse *returnCondElse() {return nullptr;};
+    virtual Cond *returnCond() {return nullptr;};
+    virtual ListLatteIdent *simple() {return nullptr;};
+    virtual Expr *expr() {return nullptr;};
     virtual bool isVRet() {return false;}
     virtual bool isRet() {return false;}
     virtual Stmt *clone() const = 0;
@@ -285,6 +289,8 @@ public:
 class Expr : public Visitable
 {
 public:
+    virtual bool true_(){return false;};
+    virtual bool false_(){return false;};
     virtual Expr *clone() const = 0;
     int line_number;
 };
@@ -453,8 +459,8 @@ public:
 class BStmt : public Stmt
 {
 public:
+    BStmt *getBlock(){return this;};
     Block *block_;
-
     BStmt(const BStmt &);
     BStmt &operator=(const BStmt &);
     BStmt(Block *p1);
@@ -529,7 +535,7 @@ class Incr : public Stmt
 {
 public:
     ListLatteIdent *listlatteident_;
-
+    ListLatteIdent *simple(){ return listlatteident_; };
     Incr(const Incr &);
     Incr &operator=(const Incr &);
     Incr(ListLatteIdent *p1);
@@ -543,7 +549,7 @@ class Decr : public Stmt
 {
 public:
     ListLatteIdent *listlatteident_;
-
+    ListLatteIdent *simple(){ return listlatteident_; };
     Decr(const Decr &);
     Decr &operator=(const Decr &);
     Decr(ListLatteIdent *p1);
@@ -586,7 +592,7 @@ class Cond : public Stmt
 public:
     Expr *expr_;
     Stmt *stmt_;
-
+    Cond *returnCond() {return this;};
     Cond(const Cond &);
     Cond &operator=(const Cond &);
     Cond(Expr *p1, Stmt *p2);
@@ -602,7 +608,7 @@ public:
     Expr *expr_;
     Stmt *stmt_1;
     Stmt *stmt_2;
-
+    CondElse *returnCondElse(){return this;};
     CondElse(const CondElse &);
     CondElse &operator=(const CondElse &);
     CondElse(Expr *p1, Stmt *p2, Stmt *p3);
@@ -648,7 +654,7 @@ class SExp : public Stmt
 {
 public:
     Expr *expr_;
-
+    Expr *expr() {return expr_;};
     SExp(const SExp &);
     SExp &operator=(const SExp &);
     SExp(Expr *p1);
@@ -877,7 +883,7 @@ public:
 class ELitFalse : public Expr
 {
 public:
-
+    bool false_(){return true;};
     ELitFalse(const ELitFalse &);
     ELitFalse &operator=(const ELitFalse &);
     ELitFalse();
@@ -903,7 +909,7 @@ public:
 class ELitTrue : public Expr
 {
 public:
-
+    bool true_(){return true;};
     ELitTrue(const ELitTrue &);
     ELitTrue &operator=(const ELitTrue &);
     ELitTrue();

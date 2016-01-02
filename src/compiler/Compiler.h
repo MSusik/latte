@@ -1,29 +1,27 @@
-#ifndef TYPECHECKER_HEADER
-#define TYPECHECKER_HEADER
+//
+// Created by msusik on 02.01.16.
+//
+
+#ifndef LATTE_COMPILER_H
+#define LATTE_COMPILER_H
+
 /* You might want to change the above name. */
 
+#include <sstream>
 #include "../Absyn.H"
-#include "Environment.h"
-#include "TypeFetcher.H"
-#include "utils.h"
-#include <map>
-#include <set>
-#include <stack>
-#include <vector>
+#include "CompilerEnvironment.h"
 
 using namespace std;
 
-class CorrectnessChecker : public Visitor
+class Compiler : public Visitor
 {
 private:
-    vector<FnDef *> functions;
-    stack<Environment> envs;
-    string current_function_type;
-    TypeFetcher typeFetcher;
+    vector<FnDef*> functions;
+    string assembly_file;
+    stringstream program;
+    Envs envs;
 public:
-    CorrectnessChecker(vector<FnDef *> functions);
-
-    ErrorState error;
+    Compiler(vector<FnDef *> functions, string assembly_file);
 
     void visitProgram(Program* p);
     void visitTopDef(TopDef* p);
@@ -115,17 +113,12 @@ public:
     void visitString(String x);
     void visitIdent(Ident x);
 
-    void check_types();
-    bool top = true;
-    bool return_ = false;
+    void addFunctionPrologue();
+    void generate();
 
-    bool checkIfElse(CondElse *ce);
+    void addFunctionEpilogue();
 
-    bool checkBlock(Blk *blk);
-
-    bool checkPart(Stmt *stmt_1);
-
-    bool CheckIf(Cond *pCond);
+    string jump;
 };
 
 

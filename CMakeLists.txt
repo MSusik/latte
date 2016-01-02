@@ -51,6 +51,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 set(COMPILER_SOURCES ${COMPILER_DIR}/main.cpp ${COMPILER_DIR}/Skeleton.C ${COMPILER_DIR}/Skeleton.H
         ${COMPILER_DIR}/CorrectnessChecker.C ${COMPILER_DIR}/CorrectnessChecker.H ${COMPILER_DIR}/utils.cpp
         ${COMPILER_DIR}/TypeFetcher.C ${COMPILER_DIR}/TypeFetcher.H
-        ${COMPILER_DIR}/utils.h src/compiler/FunctionRetriever.cpp src/compiler/FunctionRetriever.h src/compiler/Environment.cpp src/compiler/Environment.h)
+        ${COMPILER_DIR}/utils.h src/compiler/FunctionRetriever.cpp src/compiler/FunctionRetriever.h src/compiler/Environment.cpp src/compiler/Environment.h src/compiler/Compiler.cpp src/compiler/Compiler.h src/compiler/CompilerEnvironment.cpp src/compiler/CompilerEnvironment.h)
 add_executable(latc_x86_64 ${SOURCE_FILES} ${COMPILER_SOURCES})
 TARGET_LINK_LIBRARIES(latc_x86_64 ${Boost_LIBRARIES})

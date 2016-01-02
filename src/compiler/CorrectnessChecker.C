@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include "CorrectnessChecker.H"
+#include "../Absyn.H"
 
 void CorrectnessChecker::visitProgram(Program* t) {} //abstract class
 void CorrectnessChecker::visitTopDef(TopDef* t) {} //abstract class
@@ -29,8 +30,78 @@ void CorrectnessChecker::visitProg(Prog *prog)
 
 }
 
+bool CorrectnessChecker::checkBlock(Blk* blk)
+{
+    bool ret_ = false;
+    for (auto it = blk->liststmt_->begin(); it != blk->liststmt_->end(); ++it) {
+
+        if((*it)->isRet() || (*it)->isVRet())
+        {
+            ret_ = true;
+            break;
+        }
+        CondElse *ce = (*it)->returnCondElse();
+        if (ce != nullptr){
+            ret_ = this->checkIfElse(ce);
+            if(ret_)
+                break;
+        }
+        Cond *cd = (*it)->returnCond();
+        if (cd != nullptr){
+            ret_ = this->CheckIf(cd);
+            if(ret_)
+                break;
+        }
+    }
+    return ret_;
+}
+
+bool CorrectnessChecker::checkPart(Stmt* stmt_1)
+{
+    BStmt* bl = stmt_1->getBlock();
+    if(bl){
+        return this->checkBlock((Blk*)bl->block_);
+    }
+
+    CondElse *ce = stmt_1->returnCondElse();
+    if (ce != nullptr){
+        return this->checkIfElse(ce);
+    }
+    Cond *cd = stmt_1->returnCond();
+    if (cd != nullptr){
+        return this->CheckIf(cd);
+    }
+
+    return stmt_1->isRet() || stmt_1->isVRet();
+
+}
+
+
+bool CorrectnessChecker::CheckIf(Cond *pCond) {
+    if(pCond->expr_->true_())
+    {
+        return this->checkPart(pCond->stmt_);
+    }
+    return false;
+}
+
+
+bool CorrectnessChecker::checkIfElse(CondElse *ce)
+{
+    if(ce->expr_->false_())
+    {
+        return this->checkPart(ce->stmt_2);
+    } else if(ce->expr_->true_())
+    {
+        return this->checkPart(ce->stmt_1);
+    }
+    return this->checkPart(ce->stmt_1) && this->checkPart(ce->stmt_2);
+
+}
+
 void CorrectnessChecker::visitFnDef(FnDef *fndef)
 {
+    this->return_ = false;
     /* Code For FnDef Goes Here */
     envs.emplace(); // should this be empty?
     fndef->type_->accept(this);
@@ -39,23 +110,13 @@ void CorrectnessChecker::visitFnDef(FnDef *fndef)
 
     this->current_function_type = fndef->type_->getType();
     fndef->block_->accept(this);
-
-    bool return_ = false;
     // function has to return specific type
     Blk* blk = (Blk*)fndef->block_;
-    for (auto it = blk->liststmt_->begin(); it != blk->liststmt_->end(); ++it) {
+    this->return_ = this->checkBlock(blk);
 
-        if((*it)->isRet() || (*it)->isVRet())
-        {
-            return_ = true;
-            break;
-        }
-    }
-
-    if(!return_ && current_function_type != "void")
+    if(!this->return_ && current_function_type != "void")
         error.addError(fndef->line_number, "Function doesn't return");
 
-    envs.pop();
 }
 
 void CorrectnessChecker::visitClassDefNoInher(ClassDefNoInher *classdefnoinher)
@@ -110,10 +171,14 @@ void CorrectnessChecker::visitFieldDef(FieldDef *fielddef)
 
 void CorrectnessChecker::visitBlk(Blk *blk)
 {
+    if(!top)
+    {
+        envs.emplace(envs.top().get_previous());
+    }
+    top = false;
     /* Code For Blk Goes Here */
-
     blk->liststmt_->accept(this);
-
+    envs.pop();
 }
 
 void CorrectnessChecker::visitEmpty(Empty *empty)
@@ -133,9 +198,7 @@ void CorrectnessChecker::visitBStmt(BStmt *bstmt)
 
 void CorrectnessChecker::visitDecl(Decl *decl)
 {
-    if(this->while_if_depth){
-        error.addError(decl->line_number, "Declaration inside a conditional block (if or while)");
-    }
+
     if(decl->type_->getType() == "void")
     {
         error.addError(decl->line_number, "Can't declare a void variable!");
@@ -144,7 +207,7 @@ void CorrectnessChecker::visitDecl(Decl *decl)
     for(auto it=decl->listitem_->begin(); it != decl->listitem_->end(); ++it)
     {
         Ident ident = (*it)->getIdent();
-        if(this->envs.top().is_variable_declared(ident))
+        if(this->envs.top().is_variable_declared_here(ident))
         {
             this->error.addError((*it)->line_number, "Variable declared twice!: " + ident);
         }
@@ -200,7 +263,6 @@ void CorrectnessChecker::visitAssObj(AssObj *assobj)
 void CorrectnessChecker::visitIncr(Incr *incr)
 {
     /* Code For Incr Goes Here */
-    typeFetcher.checkStatement(incr, functions, envs.top(), &error);
     incr->listlatteident_->accept(this);
 
 }
@@ -208,7 +270,6 @@ void CorrectnessChecker::visitIncr(Incr *incr)
 void CorrectnessChecker::visitDecr(Decr *decr)
 {
     /* Code For Decr Goes Here */
-    typeFetcher.checkStatement(decr, functions, envs.top(), &error);
     decr->listlatteident_->accept(this);
 
 }
@@ -237,7 +298,7 @@ void CorrectnessChecker::visitVRet(VRet *vret)
 
 void CorrectnessChecker::visitCond(Cond *cond)
 {
-    this->while_if_depth++;
+
     /* Code For Cond Goes Here */
     string expr_type = typeFetcher.getType(cond->expr_, functions, envs.top(), &error);
     if(expr_type != "boolean")
@@ -245,30 +306,32 @@ void CorrectnessChecker::visitCond(Cond *cond)
         error.addError(cond->line_number, "If condition should receive a boolean. Received " + expr_type);
     }
     cond->expr_->accept(this);
+    envs.emplace(envs.top().get_previous());
     cond->stmt_->accept(this);
-    this->while_if_depth--;
+    envs.pop();
 
 }
 
 void CorrectnessChecker::visitCondElse(CondElse *condelse)
 {
     /* Code For CondElse Goes Here */
-    this->while_if_depth++;
     string expr_type = typeFetcher.getType(condelse->expr_, functions, envs.top(), &error);
     if(expr_type != "boolean")
     {
         error.addError(condelse->line_number, "If condition should receive a boolean. Received " + expr_type);
     }
     condelse->expr_->accept(this);
+    envs.emplace(envs.top().get_previous());
     condelse->stmt_1->accept(this);
+    envs.pop();
+    envs.emplace(envs.top().get_previous());
     condelse->stmt_2->accept(this);
-    this->while_if_depth--;
+    envs.pop();
 
 }
 
 void CorrectnessChecker::visitWhile(While *while_)
 {
-    this->while_if_depth++;
     /* Code For While Goes Here */
     string expr_type = typeFetcher.getType(while_->expr_, functions, envs.top(), &error);
     if(expr_type != "boolean")
@@ -276,8 +339,9 @@ void CorrectnessChecker::visitWhile(While *while_)
         error.addError(while_->line_number, "While condition should receive a boolean. Received " + expr_type);
     }
     while_->expr_->accept(this);
+    envs.emplace(envs.top().get_previous());
     while_->stmt_->accept(this);
-    this->while_if_depth--;
+    envs.pop();
 
 }
 
@@ -668,8 +732,20 @@ void CorrectnessChecker::visitListClassInstr(ListClassInstr* listclassinstr)
 
 void CorrectnessChecker::visitListStmt(ListStmt* liststmt)
 {
+
     for (ListStmt::iterator i = liststmt->begin() ; i != liststmt->end() ; ++i)
     {
+        ListLatteIdent *deref = (*i)->simple();
+
+        if(deref != nullptr){
+            // Incr or decr
+            typeFetcher.checkStatement(*i, functions, envs.top(), &error);
+        } else {
+            Expr *expr = (*i)->expr();
+            if(expr != nullptr){
+                typeFetcher.getType(expr, functions, envs.top(), &error);
+            }
+        }
         (*i)->accept(this);
     }
 }
@@ -772,3 +848,4 @@ void CorrectnessChecker::check_types() {
         error.addError(0, "No main function!");
     }
 }
+

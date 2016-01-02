@@ -79,682 +79,675 @@ int yy_mylinenumber;
 int initialize_lexer(FILE * inp);
 int yywrap(void)
 {
-  return 1;
+    return 1;
 }
 void yyerror(const char *str)
-{
-
-  std::cerr << "ERROR" << std::endl;
-  std::cerr << "Line " << yy_mylinenumber <<  ": ";
-  fprintf(stderr,"%s\n",str);
-}
-
-
+{ }
 
 static Program* YY_RESULT_Program_ = 0;
 Program* pProgram(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_Program_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_Program_;
+    }
 }
 Program* pProgram(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_Program_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_Program_;
+    }
 }
 
 static TopDef* YY_RESULT_TopDef_ = 0;
 TopDef* pTopDef(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_TopDef_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_TopDef_;
+    }
 }
 TopDef* pTopDef(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_TopDef_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_TopDef_;
+    }
 }
 
 static ListTopDef* YY_RESULT_ListTopDef_ = 0;
 ListTopDef* pListTopDef(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_ListTopDef_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_ListTopDef_;
+    }
 }
 ListTopDef* pListTopDef(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_ListTopDef_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_ListTopDef_;
+    }
 }
 
 static Arg* YY_RESULT_Arg_ = 0;
 Arg* pArg(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_Arg_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_Arg_;
+    }
 }
 Arg* pArg(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_Arg_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_Arg_;
+    }
 }
 
 static ListArg* YY_RESULT_ListArg_ = 0;
 ListArg* pListArg(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_ListArg_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_ListArg_;
+    }
 }
 ListArg* pListArg(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_ListArg_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_ListArg_;
+    }
 }
 
 static ClassInstr* YY_RESULT_ClassInstr_ = 0;
 ClassInstr* pClassInstr(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_ClassInstr_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_ClassInstr_;
+    }
 }
 ClassInstr* pClassInstr(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_ClassInstr_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_ClassInstr_;
+    }
 }
 
 static ListClassInstr* YY_RESULT_ListClassInstr_ = 0;
 ListClassInstr* pListClassInstr(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_ListClassInstr_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_ListClassInstr_;
+    }
 }
 ListClassInstr* pListClassInstr(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_ListClassInstr_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_ListClassInstr_;
+    }
 }
 
 static Block* YY_RESULT_Block_ = 0;
 Block* pBlock(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_Block_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_Block_;
+    }
 }
 Block* pBlock(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_Block_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_Block_;
+    }
 }
 
 static ListStmt* YY_RESULT_ListStmt_ = 0;
 ListStmt* pListStmt(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_ListStmt_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_ListStmt_;
+    }
 }
 ListStmt* pListStmt(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_ListStmt_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_ListStmt_;
+    }
 }
 
 static Stmt* YY_RESULT_Stmt_ = 0;
 Stmt* pStmt(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_Stmt_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_Stmt_;
+    }
 }
 Stmt* pStmt(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_Stmt_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_Stmt_;
+    }
 }
 
 static Item* YY_RESULT_Item_ = 0;
 Item* pItem(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_Item_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_Item_;
+    }
 }
 Item* pItem(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_Item_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_Item_;
+    }
 }
 
 static ListItem* YY_RESULT_ListItem_ = 0;
 ListItem* pListItem(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_ListItem_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_ListItem_;
+    }
 }
 ListItem* pListItem(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_ListItem_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_ListItem_;
+    }
 }
 
 static LatteIdent* YY_RESULT_LatteIdent_ = 0;
 LatteIdent* pLatteIdent(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_LatteIdent_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_LatteIdent_;
+    }
 }
 LatteIdent* pLatteIdent(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_LatteIdent_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_LatteIdent_;
+    }
 }
 
 static ListLatteIdent* YY_RESULT_ListLatteIdent_ = 0;
 ListLatteIdent* pListLatteIdent(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_ListLatteIdent_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_ListLatteIdent_;
+    }
 }
 ListLatteIdent* pListLatteIdent(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_ListLatteIdent_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_ListLatteIdent_;
+    }
 }
 
 static Type* YY_RESULT_Type_ = 0;
 Type* pType(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_Type_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_Type_;
+    }
 }
 Type* pType(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_Type_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_Type_;
+    }
 }
 
 static Expr* YY_RESULT_Expr_ = 0;
 Expr* pExpr(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_Expr_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_Expr_;
+    }
 }
 Expr* pExpr(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_Expr_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_Expr_;
+    }
 }
 
 static ListExpr* YY_RESULT_ListExpr_ = 0;
 ListExpr* pListExpr(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_ListExpr_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_ListExpr_;
+    }
 }
 ListExpr* pListExpr(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_ListExpr_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_ListExpr_;
+    }
 }
 
 static AddOp* YY_RESULT_AddOp_ = 0;
 AddOp* pAddOp(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_AddOp_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_AddOp_;
+    }
 }
 AddOp* pAddOp(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_AddOp_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_AddOp_;
+    }
 }
 
 static MulOp* YY_RESULT_MulOp_ = 0;
 MulOp* pMulOp(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_MulOp_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_MulOp_;
+    }
 }
 MulOp* pMulOp(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_MulOp_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_MulOp_;
+    }
 }
 
 static RelOp* YY_RESULT_RelOp_ = 0;
 RelOp* pRelOp(FILE *inp)
 {
-  yy_mylinenumber = 1;
-  initialize_lexer(inp);
-  if (yyparse())
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_RelOp_;
-  }
+    yy_mylinenumber = 1;
+    initialize_lexer(inp);
+    if (yyparse())
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_RelOp_;
+    }
 }
 RelOp* pRelOp(const char *str)
 {
-  YY_BUFFER_STATE buf;
-  int result;
-  yy_mylinenumber = 1;
-  initialize_lexer(0);
-  buf = yy_scan_string(str);
-  result = yyparse();
-  yy_delete_buffer(buf);
-  if (result)
-  { /* Failure */
-    return 0;
-  }
-  else
-  { /* Success */
-    return YY_RESULT_RelOp_;
-  }
+    YY_BUFFER_STATE buf;
+    int result;
+    yy_mylinenumber = 1;
+    initialize_lexer(0);
+    buf = yy_scan_string(str);
+    result = yyparse();
+    yy_delete_buffer(buf);
+    if (result)
+    { /* Failure */
+        return 0;
+    }
+    else
+    { /* Success */
+        return YY_RESULT_RelOp_;
+    }
 }
 
 
 
 
-#line 756 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:339  */
+#line 751 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -841,35 +834,35 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 693 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:355  */
+#line 688 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:355  */
 
-  int int_;
-  char char_;
-  double double_;
-  char* string_;
-  Program* program_;
-  TopDef* topdef_;
-  ListTopDef* listtopdef_;
-  Arg* arg_;
-  ListArg* listarg_;
-  ClassInstr* classinstr_;
-  ListClassInstr* listclassinstr_;
-  Block* block_;
-  ListStmt* liststmt_;
-  Stmt* stmt_;
-  Item* item_;
-  ListItem* listitem_;
-  LatteIdent* latteident_;
-  ListLatteIdent* listlatteident_;
-  Type* type_;
-  Expr* expr_;
-  ListExpr* listexpr_;
-  AddOp* addop_;
-  MulOp* mulop_;
-  RelOp* relop_;
+    int int_;
+    char char_;
+    double double_;
+    char* string_;
+    Program* program_;
+    TopDef* topdef_;
+    ListTopDef* listtopdef_;
+    Arg* arg_;
+    ListArg* listarg_;
+    ClassInstr* classinstr_;
+    ListClassInstr* listclassinstr_;
+    Block* block_;
+    ListStmt* liststmt_;
+    Stmt* stmt_;
+    Item* item_;
+    ListItem* listitem_;
+    LatteIdent* latteident_;
+    ListLatteIdent* listlatteident_;
+    Type* type_;
+    Expr* expr_;
+    ListExpr* listexpr_;
+    AddOp* addop_;
+    MulOp* mulop_;
+    RelOp* relop_;
 
 
-#line 871 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:355  */
+#line 866 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -884,7 +877,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 886 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:358  */
+#line 881 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -1186,15 +1179,15 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   799,   799,   801,   802,   803,   805,   806,   808,   810,
-     811,   812,   814,   815,   817,   818,   820,   822,   823,   825,
-     826,   827,   828,   829,   830,   831,   832,   833,   834,   835,
-     836,   837,   838,   839,   841,   842,   843,   844,   846,   847,
-     849,   850,   851,   853,   854,   856,   857,   858,   859,   860,
-     861,   863,   864,   865,   866,   867,   868,   869,   870,   871,
-     873,   874,   875,   876,   878,   879,   881,   882,   884,   885,
-     887,   888,   890,   891,   893,   894,   895,   897,   898,   900,
-     901,   902,   904,   905,   906,   907,   908,   909
+       0,   794,   794,   796,   797,   798,   800,   801,   803,   805,
+     806,   807,   809,   810,   812,   813,   815,   817,   818,   820,
+     821,   822,   823,   824,   825,   826,   827,   828,   829,   830,
+     831,   832,   833,   834,   836,   837,   838,   839,   841,   842,
+     844,   845,   846,   848,   849,   851,   852,   853,   854,   855,
+     856,   858,   859,   860,   861,   862,   863,   864,   865,   866,
+     868,   869,   870,   871,   873,   874,   876,   877,   879,   880,
+     882,   883,   885,   886,   888,   889,   890,   892,   893,   895,
+     896,   897,   899,   900,   901,   902,   903,   904
 };
 #endif
 
@@ -2101,523 +2094,523 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 799 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 794 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  std::reverse((yyvsp[0].listtopdef_)->begin(),(yyvsp[0].listtopdef_)->end()) ;(yyval.program_) = new Prog((yyvsp[0].listtopdef_)); (yyval.program_)->line_number = yy_mylinenumber; YY_RESULT_Program_= (yyval.program_); }
-#line 2105 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2100 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 801 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 796 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  std::reverse((yyvsp[-2].listarg_)->begin(),(yyvsp[-2].listarg_)->end()) ;(yyval.topdef_) = new FnDef((yyvsp[-5].type_), (yyvsp[-4].string_), (yyvsp[-2].listarg_), (yyvsp[0].block_)); (yyval.topdef_)->line_number = yy_mylinenumber;  }
-#line 2111 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2106 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 802 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 797 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.topdef_) = new ClassDefNoInher((yyvsp[-3].string_), (yyvsp[-1].listclassinstr_)); (yyval.topdef_)->line_number = yy_mylinenumber;  }
-#line 2117 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2112 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 803 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 798 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.topdef_) = new ClassDefInher((yyvsp[-5].string_), (yyvsp[-3].string_), (yyvsp[-1].listclassinstr_)); (yyval.topdef_)->line_number = yy_mylinenumber;  }
-#line 2123 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2118 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 805 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 800 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.listtopdef_) = new ListTopDef() ; (yyval.listtopdef_)->push_back((yyvsp[0].topdef_));  }
-#line 2129 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2124 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 806 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 801 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyvsp[0].listtopdef_)->push_back((yyvsp[-1].topdef_)) ; (yyval.listtopdef_) = (yyvsp[0].listtopdef_) ;  }
-#line 2135 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2130 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 808 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 803 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.arg_) = new Ar((yyvsp[-1].type_), (yyvsp[0].string_)); (yyval.arg_)->line_number = yy_mylinenumber;  }
-#line 2141 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2136 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 810 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 805 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.listarg_) = new ListArg();  }
-#line 2147 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2142 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 811 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 806 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.listarg_) = new ListArg() ; (yyval.listarg_)->push_back((yyvsp[0].arg_));  }
-#line 2153 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2148 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 812 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 807 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyvsp[0].listarg_)->push_back((yyvsp[-2].arg_)) ; (yyval.listarg_) = (yyvsp[0].listarg_) ;  }
-#line 2159 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2154 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 814 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 809 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  std::reverse((yyvsp[-2].listarg_)->begin(),(yyvsp[-2].listarg_)->end()) ;(yyval.classinstr_) = new MethodDef((yyvsp[-5].type_), (yyvsp[-4].string_), (yyvsp[-2].listarg_), (yyvsp[0].block_)); (yyval.classinstr_)->line_number = yy_mylinenumber;  }
-#line 2165 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2160 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 815 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 810 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.classinstr_) = new FieldDef((yyvsp[-2].type_), (yyvsp[-1].string_)); (yyval.classinstr_)->line_number = yy_mylinenumber;  }
-#line 2171 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2166 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 817 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 812 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.listclassinstr_) = new ListClassInstr();  }
-#line 2177 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2172 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 818 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 813 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyvsp[-1].listclassinstr_)->push_back((yyvsp[0].classinstr_)) ; (yyval.listclassinstr_) = (yyvsp[-1].listclassinstr_) ;  }
-#line 2183 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2178 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 820 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 815 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.block_) = new Blk((yyvsp[-1].liststmt_)); (yyval.block_)->line_number = yy_mylinenumber;  }
-#line 2189 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2184 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 822 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 817 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.liststmt_) = new ListStmt();  }
-#line 2195 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2190 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 823 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 818 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyvsp[-1].liststmt_)->push_back((yyvsp[0].stmt_)) ; (yyval.liststmt_) = (yyvsp[-1].liststmt_) ;  }
-#line 2201 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2196 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 825 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 820 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.stmt_) = new Empty(); (yyval.stmt_)->line_number = yy_mylinenumber;  }
-#line 2207 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2202 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 826 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 821 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.stmt_) = new BStmt((yyvsp[0].block_)); (yyval.stmt_)->line_number = yy_mylinenumber;  }
-#line 2213 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2208 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 827 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 822 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  std::reverse((yyvsp[-1].listitem_)->begin(),(yyvsp[-1].listitem_)->end()) ;(yyval.stmt_) = new Decl((yyvsp[-2].type_), (yyvsp[-1].listitem_)); (yyval.stmt_)->line_number = yy_mylinenumber;  }
-#line 2219 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2214 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 828 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 823 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  std::reverse((yyvsp[-3].listlatteident_)->begin(),(yyvsp[-3].listlatteident_)->end()) ;(yyval.stmt_) = new Ass((yyvsp[-3].listlatteident_), (yyvsp[-1].expr_)); (yyval.stmt_)->line_number = yy_mylinenumber;  }
-#line 2225 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2220 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 829 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 824 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  std::reverse((yyvsp[-6].listlatteident_)->begin(),(yyvsp[-6].listlatteident_)->end()) ;(yyval.stmt_) = new AssArr((yyvsp[-6].listlatteident_), (yyvsp[-3].type_), (yyvsp[-1].expr_)); (yyval.stmt_)->line_number = yy_mylinenumber;  }
-#line 2231 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2226 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 830 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 825 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  std::reverse((yyvsp[-3].listlatteident_)->begin(),(yyvsp[-3].listlatteident_)->end()) ;(yyval.stmt_) = new AssObj((yyvsp[-3].listlatteident_), (yyvsp[0].type_)); (yyval.stmt_)->line_number = yy_mylinenumber;  }
-#line 2237 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2232 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 831 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 826 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  std::reverse((yyvsp[-2].listlatteident_)->begin(),(yyvsp[-2].listlatteident_)->end()) ;(yyval.stmt_) = new Incr((yyvsp[-2].listlatteident_)); (yyval.stmt_)->line_number = yy_mylinenumber;  }
-#line 2243 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2238 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 832 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 827 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  std::reverse((yyvsp[-2].listlatteident_)->begin(),(yyvsp[-2].listlatteident_)->end()) ;(yyval.stmt_) = new Decr((yyvsp[-2].listlatteident_)); (yyval.stmt_)->line_number = yy_mylinenumber;  }
-#line 2249 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2244 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 833 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 828 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.stmt_) = new Ret((yyvsp[-1].expr_)); (yyval.stmt_)->line_number = yy_mylinenumber;  }
-#line 2255 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2250 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 834 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 829 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.stmt_) = new VRet(); (yyval.stmt_)->line_number = yy_mylinenumber;  }
-#line 2261 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2256 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 835 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 830 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.stmt_) = new Cond((yyvsp[-2].expr_), (yyvsp[0].stmt_)); (yyval.stmt_)->line_number = yy_mylinenumber;  }
-#line 2267 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2262 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 836 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 831 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.stmt_) = new CondElse((yyvsp[-4].expr_), (yyvsp[-2].stmt_), (yyvsp[0].stmt_)); (yyval.stmt_)->line_number = yy_mylinenumber;  }
-#line 2273 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2268 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 837 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 832 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.stmt_) = new While((yyvsp[-2].expr_), (yyvsp[0].stmt_)); (yyval.stmt_)->line_number = yy_mylinenumber;  }
-#line 2279 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2274 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 838 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 833 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  std::reverse((yyvsp[-2].listlatteident_)->begin(),(yyvsp[-2].listlatteident_)->end()) ;(yyval.stmt_) = new Foreach((yyvsp[-5].type_), (yyvsp[-4].string_), (yyvsp[-2].listlatteident_), (yyvsp[0].stmt_)); (yyval.stmt_)->line_number = yy_mylinenumber;  }
-#line 2285 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2280 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 839 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 834 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.stmt_) = new SExp((yyvsp[-1].expr_)); (yyval.stmt_)->line_number = yy_mylinenumber;  }
-#line 2291 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2286 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 841 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 836 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.item_) = new NoInit((yyvsp[0].string_)); (yyval.item_)->line_number = yy_mylinenumber;  }
-#line 2297 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2292 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 842 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 837 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.item_) = new Init((yyvsp[-2].string_), (yyvsp[0].expr_)); (yyval.item_)->line_number = yy_mylinenumber;  }
-#line 2303 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2298 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 843 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 838 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.item_) = new InitArray((yyvsp[-6].string_), (yyvsp[-3].type_), (yyvsp[-1].expr_)); (yyval.item_)->line_number = yy_mylinenumber;  }
-#line 2309 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2304 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 844 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 839 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.item_) = new InitObj((yyvsp[-3].string_), (yyvsp[0].type_)); (yyval.item_)->line_number = yy_mylinenumber;  }
-#line 2315 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2310 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 846 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 841 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.listitem_) = new ListItem() ; (yyval.listitem_)->push_back((yyvsp[0].item_));  }
-#line 2321 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2316 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 847 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 842 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyvsp[0].listitem_)->push_back((yyvsp[-2].item_)) ; (yyval.listitem_) = (yyvsp[0].listitem_) ;  }
-#line 2327 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2322 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 849 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 844 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.latteident_) = new SingleIdent((yyvsp[0].string_)); (yyval.latteident_)->line_number = yy_mylinenumber;  }
-#line 2333 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2328 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 850 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 845 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.latteident_) = new ArrayIdent((yyvsp[-3].string_), (yyvsp[-1].expr_)); (yyval.latteident_)->line_number = yy_mylinenumber;  }
-#line 2339 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2334 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 851 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 846 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.latteident_) = new SelfIdent(); (yyval.latteident_)->line_number = yy_mylinenumber;  }
-#line 2345 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2340 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 853 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 848 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.listlatteident_) = new ListLatteIdent() ; (yyval.listlatteident_)->push_back((yyvsp[0].latteident_));  }
-#line 2351 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2346 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 854 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 849 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyvsp[0].listlatteident_)->push_back((yyvsp[-2].latteident_)) ; (yyval.listlatteident_) = (yyvsp[0].listlatteident_) ;  }
-#line 2357 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2352 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 856 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 851 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.type_) = new Class((yyvsp[0].string_)); (yyval.type_)->line_number = yy_mylinenumber;  }
-#line 2363 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2358 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 857 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 852 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.type_) = new Int(); (yyval.type_)->line_number = yy_mylinenumber;  }
-#line 2369 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2364 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 858 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 853 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.type_) = new Str(); (yyval.type_)->line_number = yy_mylinenumber;  }
-#line 2375 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2370 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 859 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 854 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.type_) = new Bool(); (yyval.type_)->line_number = yy_mylinenumber;  }
-#line 2381 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2376 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 860 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 855 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.type_) = new Void(); (yyval.type_)->line_number = yy_mylinenumber;  }
-#line 2387 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2382 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 861 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 856 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.type_) = new ArrayType((yyvsp[-2].type_)); (yyval.type_)->line_number = yy_mylinenumber;  }
-#line 2393 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2388 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 863 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 858 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  std::reverse((yyvsp[0].listlatteident_)->begin(),(yyvsp[0].listlatteident_)->end()) ;(yyval.expr_) = new EVar((yyvsp[0].listlatteident_)); (yyval.expr_)->line_number = yy_mylinenumber;  }
-#line 2399 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2394 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 864 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 859 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = new ELitInt((yyvsp[0].int_)); (yyval.expr_)->line_number = yy_mylinenumber;  }
-#line 2405 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2400 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 865 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 860 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = new ELitFalse(); (yyval.expr_)->line_number = yy_mylinenumber;  }
-#line 2411 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2406 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 866 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 861 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = new ELitNull(); (yyval.expr_)->line_number = yy_mylinenumber;  }
-#line 2417 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2412 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 867 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 862 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = new ELitTrue(); (yyval.expr_)->line_number = yy_mylinenumber;  }
-#line 2423 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2418 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 868 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 863 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  std::reverse((yyvsp[-1].listexpr_)->begin(),(yyvsp[-1].listexpr_)->end()) ;(yyval.expr_) = new EApp((yyvsp[-3].string_), (yyvsp[-1].listexpr_)); (yyval.expr_)->line_number = yy_mylinenumber;  }
-#line 2429 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2424 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 869 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 864 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  std::reverse((yyvsp[-3].listlatteident_)->begin(),(yyvsp[-3].listlatteident_)->end()) ; std::reverse((yyvsp[-1].listexpr_)->begin(),(yyvsp[-1].listexpr_)->end()) ;(yyval.expr_) = new EInstanceApp((yyvsp[-3].listlatteident_), (yyvsp[-1].listexpr_)); (yyval.expr_)->line_number = yy_mylinenumber;  }
-#line 2435 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2430 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 870 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 865 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = new EString((yyvsp[0].string_)); (yyval.expr_)->line_number = yy_mylinenumber;  }
-#line 2441 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2436 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 871 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 866 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = (yyvsp[-1].expr_);  }
-#line 2447 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2442 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 873 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 868 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = new Neg((yyvsp[0].expr_)); (yyval.expr_)->line_number = yy_mylinenumber;  }
-#line 2453 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2448 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 874 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 869 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = new Not((yyvsp[0].expr_)); (yyval.expr_)->line_number = yy_mylinenumber;  }
-#line 2459 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2454 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 875 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 870 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = new ECast((yyvsp[-2].string_), (yyvsp[0].expr_)); (yyval.expr_)->line_number = yy_mylinenumber;  }
-#line 2465 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2460 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 876 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 871 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = (yyvsp[0].expr_);  }
-#line 2471 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2466 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 878 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 873 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = new EMul((yyvsp[-2].expr_), (yyvsp[-1].mulop_), (yyvsp[0].expr_)); (yyval.expr_)->line_number = yy_mylinenumber;  }
-#line 2477 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2472 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 879 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 874 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = (yyvsp[0].expr_);  }
-#line 2483 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2478 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 881 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 876 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = new EAdd((yyvsp[-2].expr_), (yyvsp[-1].addop_), (yyvsp[0].expr_)); (yyval.expr_)->line_number = yy_mylinenumber;  }
-#line 2489 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2484 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 882 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 877 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = (yyvsp[0].expr_);  }
-#line 2495 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2490 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 884 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 879 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = new ERel((yyvsp[-2].expr_), (yyvsp[-1].relop_), (yyvsp[0].expr_)); (yyval.expr_)->line_number = yy_mylinenumber;  }
-#line 2501 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2496 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 885 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 880 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = (yyvsp[0].expr_);  }
-#line 2507 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2502 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 887 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 882 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = new EAnd((yyvsp[-2].expr_), (yyvsp[0].expr_)); (yyval.expr_)->line_number = yy_mylinenumber;  }
-#line 2513 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2508 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 888 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 883 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = (yyvsp[0].expr_);  }
-#line 2519 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2514 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 890 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 885 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = new EOr((yyvsp[-2].expr_), (yyvsp[0].expr_)); (yyval.expr_)->line_number = yy_mylinenumber;  }
-#line 2525 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2520 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 891 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 886 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.expr_) = (yyvsp[0].expr_);  }
-#line 2531 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2526 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 893 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 888 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.listexpr_) = new ListExpr();  }
-#line 2537 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2532 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 894 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 889 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.listexpr_) = new ListExpr() ; (yyval.listexpr_)->push_back((yyvsp[0].expr_));  }
-#line 2543 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2538 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 895 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 890 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyvsp[0].listexpr_)->push_back((yyvsp[-2].expr_)) ; (yyval.listexpr_) = (yyvsp[0].listexpr_) ;  }
-#line 2549 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2544 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 897 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 892 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.addop_) = new Plus(); (yyval.addop_)->line_number = yy_mylinenumber;  }
-#line 2555 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2550 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 898 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 893 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.addop_) = new Minus(); (yyval.addop_)->line_number = yy_mylinenumber;  }
-#line 2561 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2556 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 900 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 895 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.mulop_) = new Times(); (yyval.mulop_)->line_number = yy_mylinenumber;  }
-#line 2567 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2562 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 901 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 896 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.mulop_) = new Div(); (yyval.mulop_)->line_number = yy_mylinenumber;  }
-#line 2573 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2568 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 902 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 897 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.mulop_) = new Mod(); (yyval.mulop_)->line_number = yy_mylinenumber;  }
-#line 2579 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2574 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 904 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 899 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.relop_) = new LTH(); (yyval.relop_)->line_number = yy_mylinenumber;  }
-#line 2585 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2580 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 905 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 900 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.relop_) = new LE(); (yyval.relop_)->line_number = yy_mylinenumber;  }
-#line 2591 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2586 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 906 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 901 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.relop_) = new GTH(); (yyval.relop_)->line_number = yy_mylinenumber;  }
-#line 2597 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2592 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 85:
-#line 907 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 902 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.relop_) = new GE(); (yyval.relop_)->line_number = yy_mylinenumber;  }
-#line 2603 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2598 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 86:
-#line 908 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 903 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.relop_) = new EQU(); (yyval.relop_)->line_number = yy_mylinenumber;  }
-#line 2609 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2604 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
   case 87:
-#line 909 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
+#line 904 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Latte.y" /* yacc.c:1646  */
     {  (yyval.relop_) = new NE(); (yyval.relop_)->line_number = yy_mylinenumber;  }
-#line 2615 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2610 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
     break;
 
 
-#line 2619 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
+#line 2614 "/home/msusik/Publiczny/zajecia/mrjp/zad3cpp/src/Parser.C" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

@@ -79,6 +79,7 @@ string TypeFetcher::getFunctionType(Ident function_name, int line)
 string TypeFetcher::getType(Expr* ex, vector<FnDef *> functions, const Environment& env, ErrorState *errors){
     this->functions = functions;
     this->env = env;
+    this->type = "void";
     this->errors = errors;
     ex->accept(this);
     return this->type;
@@ -426,6 +427,7 @@ void TypeFetcher::visitEVar(EVar *evar)
     Type *type = this->env.get_type(id);
     if(type == nullptr){
         this->errors->addError(evar->line_number, "Undefined variable: " + id);
+        return;
     }
     this->type = type->getType();
     // TODO evar->listlatteident_->accept(this);

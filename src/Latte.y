@@ -10,7 +10,7 @@ typedef struct yy_buffer_state *YY_BUFFER_STATE;
 int yyparse(void);
 int yylex(void);
 YY_BUFFER_STATE yy_scan_string(const char *str);
-void yy_delete_buffer(YY_BUFFER_STATE buf);cout
+void yy_delete_buffer(YY_BUFFER_STATE buf);
 int yy_mylinenumber;
 int initialize_lexer(FILE * inp);
 int yywrap(void)

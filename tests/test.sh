@@ -3,6 +3,7 @@
 EXECUTABLE=`pwd`/../latc_x86_64
 OFFICIAL_BAD=`pwd`/official/bad/
 STUDENTS_BAD=`pwd`/students/bad/semantic
+OFFICIAL_GOOD=`pwd`/official/good/
 
 <<COM
 for i in `find  $OFFICIAL_BAD -iname "*.lat" | sort`
@@ -36,3 +37,17 @@ done
 find $STUDENTS_BAD -iname "*.s" | xargs rm
 find $STUDENTS_BAD -not -iname "*.lat" | xargs rm
 COM
+
+
+for i in `find  $OFFICIAL_GOOD -iname "*.lat" | sort`
+do
+    echo "test" $i ;
+    $EXECUTABLE $i ;
+    if [ $? == 0 ]
+    then
+        echo "Returned 0, but it shouldn't!" $i
+    fi
+done
+
+find $OFFICIAL_GOOD -iname "*.s" | xargs rm
+find $OFFICIAL_GOOD -not -iname "*.lat" | xargs rm
