@@ -5,6 +5,7 @@
 #ifndef LATTE_COMPILERENVIRONMENT_H
 #define LATTE_COMPILERENVIRONMENT_H
 
+#include<algorithm>
 #include<map>
 #include<string>
 #include<stack>
@@ -17,10 +18,10 @@ using namespace std;
 class Registers {
 private:
     map<string, bool> used; //is register used
-    string argumentsNumbers[6] = {"edi", "esi", "edx", "ecx", "r8d", "r9d"};
-    string argumentsStrings[6] = {"rdi", "rsi", "rdx", "rcx", "r8", "r9"};
-    string arguments[6] = {"di", "si", "dx", "cx", "r8", "r9"};
-    int args=0;
+    vector<string> argumentsNumbers = {"edi", "esi", "edx", "ecx", "r8d", "r9d"};
+    vector<string> argumentsStrings = {"rdi", "rsi", "rdx", "rcx", "r8", "r9"};
+    vector<string> arguments = {"di", "si", "dx", "cx", "r8", "r9"};
+    int args = 0;
     int args2 = 0;
     int stackMin = -8;
 public:
@@ -28,7 +29,6 @@ public:
     map<string, string> variables;
     Registers();
     Registers(bool sameStack, const Registers& reg);
-    vector<int> call_function(vector<pair<string, bool>> pointers); // returns shifts on stack
     string getTemp(bool pointer);
     string freeFree(string name);
     string getFree(bool pointer);
@@ -40,11 +40,20 @@ public:
     string addArgumentToVariables(string name, bool pointer);
     void freeArguments();
     vector<string> temps;
-
+    string etor(string e);
+    string rtoe(string r);
     void clearArgs(stringstream *ss);
     void restoreArgs(stringstream *ss);
-
+    bool isUsed(string name);
     bool calling();
+
+    void addUsed(string used_);
+
+    string secureRegister(string value, stringstream *program, bool pointer);
+
+    char tempOnStack = 0;
+
+    char getOperator(const string &name);
 };
 
 
@@ -56,8 +65,6 @@ public:
 
     Registers registers;
     map<string, int> stackShifts; // 0 if in register
-    void saveRegisters(stringstream *ss);
-    void freeRegisters(stringstream *ss);
     void putArg(stringstream *ss);
     string freeTemp();
     string getTemp(bool pointer);

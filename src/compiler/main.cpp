@@ -35,7 +35,9 @@ void compile_target(const string &full_without_extension, const char* first_argv
     command << outer_compiler << " -w -o " << full_without_extension << " " << full_without_extension << ".s "
             << full_path.parent_path() << runtime;
 
-    system(command.str().c_str());
+    int i = system(command.str().c_str());
+    if(i != 0)
+        cout << "UPS!" << endl;
 }
 
 void create_stub(const string &full_without_extension){

@@ -13,31 +13,20 @@ Registers::Registers() {
     used.insert(make_pair("r12", false));
     used.insert(make_pair("r13", false));
     used.insert(make_pair("r14", false));
-    used.insert(make_pair("r15", false));
 }
 
 
 Registers::Registers(bool sameStack, const Registers& reg) : Registers() {
     if(sameStack)
     {
-        cout << "SAME STACK" << endl;
         variables_on_stack = reg.variables_on_stack;
+        variables = reg.variables;
     }
+    used = reg.used;
     cout << variables_on_stack.size() << " REG" << endl;
-}
-
-vector<int> Registers::call_function(vector<pair<string, bool>> pointers) {
-    //unused
-    vector<int> leftovers;
-    int index = 0;
-    for(auto it= pointers.begin(); it != pointers.end(); ++it)
-    {
-
-        used[arguments[index++]] = true;
-        if(index > 6)
-            break; // TODO
-    }
-    return leftovers;
+    cout << variables.size() << " Variables" << endl;
+    cout << used.size() << " Used" << endl;
+    flush(cout);
 }
 
 void Envs::addEnv(bool sameStack) {
@@ -66,33 +55,16 @@ CompilerEnvironment &Envs::top() {
     return envs.top();
 }
 
-void CompilerEnvironment::saveRegisters(stringstream *ss) {
-    (*ss) << "\tpushq rdi\n";
-    (*ss) << "\tpushq rsi\n";
-    (*ss) << "\tpushq rdx\n";
-    (*ss) << "\tpushq rcx\n";
-    (*ss) << "\tpushq r8\n";
-    (*ss) << "\tpushq r9\n";
-}
-
-void CompilerEnvironment::freeRegisters(stringstream *ss) {
-    (*ss) << "\tpopq r9\n";
-    (*ss) << "\tpopq r8\n";
-    (*ss) << "\tpopq rcx\n";
-    (*ss) << "\tpopq rdx\n";
-    (*ss) << "\tpopq rsi\n";
-    (*ss) << "\tpopq rdi\n";
-}
-
 string CompilerEnvironment::freeTemp() {
     return this->registers.freeTemp();
 }
 
 void CompilerEnvironment::putArg(stringstream *ss) {
     /// to co jest na topie
-    string reg = this->registers.getArg(false);
     string value = this->registers.freeTemp();
-    (*ss) << "\tmovl " << value << ", " << reg <<"\n";
+    char op = this->registers.getOperator(value);
+    string reg = this->registers.getArg(op == 'q');
+    (*ss) << "\tmov" << op << " " << value << ", " << reg <<"\n";
 }
 
 
@@ -106,14 +78,14 @@ string Registers::getFree(bool pointer) {
 
     }
     this->used[th] = true;
-    string reg_name = this->short_to_long(th, pointer);
+    return this->short_to_long(th, pointer);
     //cout << "Getting " << reg_name << endl;
-    return "%" + reg_name;
 }
 
 
 string Registers::getTemp(bool pointer) {
     string reg_name = this->getFree(pointer);
+    //cout <<"Getting temp " << reg_name << endl;
     this->temps.push_back(reg_name);
     return reg_name;
 }
@@ -127,6 +99,7 @@ string Registers::freeFree(string reg_name) {
 }
 
 string Registers::freeTemp() {
+    //cout << "free" << endl;
     string reg_name = this->temps.back();
     if(reg_name[0] == 'V' || reg_name[0] == '$')
     {
@@ -147,15 +120,15 @@ string Registers::short_to_long(string s, bool pointer) {
     if(pointer)
     {
         if(s[0] == 'r')
-            return s;
+            return '%' + s;
         else
-            return "r" + s;
+            return "%r" + s;
     } else
     {
         if(s[0] == 'r')
-            return s + "d";
+            return '%' + s + "d";
         else
-            return "e" + s;
+            return "%e" + s;
 
     }
 }
@@ -195,7 +168,7 @@ void CompilerEnvironment::addVariable(string name, bool pointer) {
 }
 
 string CompilerEnvironment::getVariable(string name) {
-    if(registers.calling()){
+    if(registers.calling() && registers.variables_on_stack.find(name) != registers.variables_on_stack.end()){
         return to_string(this->registers.variables_on_stack[name]) + "(%rbp)";
     } else {
         return this->registers.variables[name];
@@ -231,27 +204,40 @@ void Registers::freeArguments() {
 }
 
 void Registers::clearArgs(stringstream *ss) {
-    for(int i = 0; i < args; ++i)
-    {
-        (*ss) << "\tpushl %" << argumentsNumbers[i] << endl;
-        for(auto it = this->variables.begin(); it!= this->variables.end(); ++it){
-            if(it->second == "%" + argumentsNumbers[i]) {
-                variables_on_stack.insert(make_pair(it->first, stackMin));
-                stackMin -= 8;
-                break;
-            }
-        }
+    //also remembers the temp
 
+    for(auto it = this->variables.begin(); it!= this->variables.end(); ++it){
+        (*ss) << "\tpushq " << etor(it->second) << endl;
+        variables_on_stack.insert(make_pair(it->first, stackMin));
+        stackMin -= 8;
     }
+
+    if(temps.size()){
+        string ft = freeTemp();
+        if(ft[0] == '$')
+            (*ss) << "\tpushq " << ft << endl;
+        else
+            (*ss) << "\tpushq " << etor(ft) << endl;
+        stackMin -= 8;
+        this->tempOnStack = this->getOperator(ft);
+    }
+
     args2 = args;
     args = 0;
 }
 
 void Registers::restoreArgs(stringstream *ss) {
-    int index = 0;
-    for(auto i = this->variables_on_stack.begin(); i != this->variables_on_stack.end() ; ++i)
+    //also restores the temp
+    if(tempOnStack) {
+        stackMin += 8;
+        string temp = getTemp(tempOnStack == 'q');
+        (*ss) << "\tpopq " << etor(temp) << endl;
+        tempOnStack = 0;
+    }
+
+    for(auto it = this->variables.rbegin(); it != this->variables.rend() ; ++it)
     {
-        (*ss) << "\tpopl %" << argumentsNumbers[index] << endl;
+        (*ss) << "\tpopq " << etor(it->second) << endl;
         stackMin += 8;
     }
     variables_on_stack.clear();
@@ -269,4 +255,43 @@ CompilerEnvironment::CompilerEnvironment() : registers(false, this->registers) {
 
 CompilerEnvironment::CompilerEnvironment(bool sameStack, const CompilerEnvironment& ce) : registers(sameStack, ce.registers) {
 
+}
+
+bool Registers::isUsed(string name) {
+    auto it = find(arguments.begin(), arguments.end(), name);
+    if(it != arguments.end()){
+        int pos = it - arguments.begin();
+        return pos <= args;
+    }
+    return used.at(name);
+}
+
+string Registers::etor(string e) {
+    return short_to_long(long_to_short(e), true);
+}
+
+string Registers::rtoe(string r) {
+    return short_to_long(long_to_short(r), false);
+}
+
+void Registers::addUsed(string used_) {
+    used[used_] = true;
+}
+
+string Registers::secureRegister(string value, stringstream *program, bool pointer) {
+    string res = pointer ? "%r15" : "%r15d";
+    if(value[0] == '$') {
+        if(pointer)
+            (*program) << "\tmovq " << value << ", %r15\n";
+        else
+            (*program) << "\tmovl " << value << ", %r15d\n";
+        return res;
+    }
+    return value;
+}
+
+char Registers::getOperator(const string &name) {
+    if(name[1] == 'e' || name[name.size() - 1] == 'd' || name[0] == '$')
+        return 'l';
+    return 'q';
 }

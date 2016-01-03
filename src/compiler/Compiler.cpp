@@ -91,8 +91,7 @@ void Compiler::visitClassDefInher(ClassDefInher *classdefinher)
 void Compiler::visitAr(Ar *ar)
 {
     /* Code For Ar Goes Here */
-
-    envs.top().addArgumentToVariables(ar->ident_, false);
+    envs.top().addArgumentToVariables(ar->ident_, ar->type_->getType() == "string");
     ar->type_->accept(this);
     //visitIdent(ar->ident_);
 
@@ -144,7 +143,7 @@ void Compiler::visitBStmt(BStmt *bstmt)
 void Compiler::visitDecl(Decl *decl)
 {
     /* Code For Decl Goes Here */
-
+    this->declared_type = decl->type_->getType();
     decl->type_->accept(this);
     decl->listitem_->accept(this);
 
@@ -158,8 +157,10 @@ void Compiler::visitAss(Ass *ass)
     ass->expr_->accept(this); // na górze wartość
 
     string r1 = envs.top().freeTemp();
+    char op;
+    op = envs.top().registers.getOperator(r1);
     if(r1 != var_)
-        this->program << "\tmovl " << r1 << ", " << var_ << endl;
+        this->program << "\tmov" << op << " " << r1 << ", " << var_ << endl;
 }
 
 void Compiler::visitAssArr(AssArr *assarr)
@@ -205,8 +206,9 @@ void Compiler::visitRet(Ret *ret)
 
     // TO DO type
     string retReg = envs.top().freeTemp();
-    if(retReg != "%eax")
-        this->program << "\tmovl " << retReg << ", %eax\n";
+    char op = this->envs.top().registers.getOperator(retReg);
+    if(retReg != "%eax" || retReg != "%rax")
+        this->program << "\tmov" << op << " " << retReg << ", %eax\n";
     this->addFunctionEpilogue();
     this->program << "\tret\n";
 }
@@ -222,9 +224,15 @@ void Compiler::visitCond(Cond *cond)
 {
     /* Code For Cond Goes Here */
 
-    cond->expr_->accept(this);
-    cond->stmt_->accept(this);
+    string afterLabel = this->envs.getNextLabel();
+    string yesLabel = this->envs.getNextLabel();
 
+    cond->expr_->accept(this);
+    this->program << "\t" << jump << " " << yesLabel << endl;
+    this->program << "\tjmp " << afterLabel << endl;
+    this->program << yesLabel << ":\n";
+    cond->stmt_->accept(this);
+    this->program << afterLabel << ":\n";
 }
 
 void Compiler::visitCondElse(CondElse *condelse)
@@ -282,14 +290,13 @@ void Compiler::visitSExp(SExp *sexp)
     /* Code For SExp Goes Here */
 
     sexp->expr_->accept(this);
-    this->envs.top().freeTemp(); //not used
+    // TODO this->envs.top().freeTemp(); //not used
 }
 
 void Compiler::visitNoInit(NoInit *noinit)
 {
     /* Code For NoInit Goes Here */
-
-    this->envs.top().addVariable(noinit->ident_, false);
+    this->envs.top().addVariable(noinit->ident_, declared_type == "string");
     visitIdent(noinit->ident_);
 
 }
@@ -393,7 +400,8 @@ void Compiler::visitEVar(EVar *evar)
 {
     /* Code For EVar Goes Here */
     this->envs.top().registers.temps.push_back("V" + this->envs.top().getVariable(evar->listlatteident_->at(0)->getIdent()));
-    //evar->listlatteident_->accept(this); CO TO JEST?
+    //evar->listlatteident_->accept(this); psuje się, bo visitListLatte
+    //cout << "Temp Var" << endl;
 
 }
 
@@ -436,8 +444,15 @@ void Compiler::visitEApp(EApp *eapp)
 
     this->program << "\tcall " << eapp->ident_ << endl;
     this->envs.top().registers.freeArguments();
-    this->envs.top().registers.temps.push_back("%eax");
-
+    //Nie wolno robić takich rzeczy!
+    //this->envs.top().registers.temps.push_back("%eax");
+    //this->envs.top().registers.addUsed("ax");
+    string type_  =this->getFunctionReturnType(eapp->ident_);
+    if(type_.length()) {
+        char op = this->envs.top().registers.getOperator(type_);
+        string free_ = this->envs.top().getTemp(false);
+        this->program << "\tmov" << op << " " << type_ << ", " << free_ << endl;
+    }
     this->envs.top().registers.restoreArgs(&program);
 
 
@@ -540,13 +555,15 @@ void Compiler::visitPlus(Plus *plus)
     // TODO Strings
     string r2 = envs.top().freeTemp(); // drugi
     string r1 = envs.top().freeTemp(); // pierwszy
-    string r3 = envs.top().getTemp(false);
+    char op = this->envs.top().registers.getOperator(r1);
 
-    if(r1 != r3)
-        this->program << "\tmovl " << r1 << ", " << r3 << endl;
-    this->program << "\taddl " << r2 << ", " << r3 << endl;
+    if(op == 'l') {
+        string r3 = envs.top().getTemp(false);
 
-    // this->envs.top().registers.temps.push(r2);
+        if (r1 != r3)
+            this->program << "\tmovl " << r1 << ", " << r3 << endl;
+        this->program << "\taddl " << r2 << ", " << r3 << endl;
+    }
 
 }
 
@@ -562,7 +579,6 @@ void Compiler::visitMinus(Minus *minus)
         this->program << "\tmovl " << r1 << ", " << r3 << endl;
     this->program << "\tsubl " << r2 << ", " << r3 << endl;
 
-    // this->envs.top().registers.temps.push(envs.top().freeTemp());
 
 }
 
@@ -573,16 +589,30 @@ void Compiler::visitTimes(Times *times)
     string r2 = envs.top().freeTemp(); // drugi
     string r1 = envs.top().freeTemp(); // pierwszy
 
-    this->program << "\tpushq %rax\t;mnozenie\n";
-    this->program << "\tpushq %rdx\n";
+    bool raxUsed = this->envs.top().registers.isUsed("ax");
+    bool rdxUsed = this->envs.top().registers.isUsed("dx");
+
+    if(r1 == "%eax"){
+        r1 = this->envs.top().getTemp(false);
+        this->program << "\tmovl %eax, " << r1 << endl;
+    }
+
+    r1 = this->envs.top().registers.secureRegister(r1, &program, false);
+
+    if(raxUsed)
+        this->program << "\tpushq %rax\t;mnozenie\n";
+    if(rdxUsed)
+        this->program << "\tpushq %rdx\n";
     if(r2 != "%eax")
         this->program << "\tmovl " << r2 << ", %eax\n";
-    this->program << "\tmull " << r1 << endl;
+    this->program << "\timull " << r1 << endl;
     string free_ = this->envs.top().getTemp(false);
 
     this->program << "\tmovl %eax, " << free_ <<endl;
-    this->program << "\tpopq %rdx\n";
-    this->program << "\tpopq %rax\n";
+    if(rdxUsed)
+        this->program << "\tpopq %rdx\n";
+    if(raxUsed)
+        this->program << "\tpopq %rax\n";
 
 
 }
@@ -590,6 +620,35 @@ void Compiler::visitTimes(Times *times)
 void Compiler::visitDiv(Div *div)
 {
     /* Code For Div Goes Here */
+    cout << program.str() << endl <<endl;
+    string r1 = envs.top().freeTemp(); // drugi
+    string r2 = envs.top().freeTemp(); // pierwszy
+
+    bool raxUsed = this->envs.top().registers.isUsed("ax");
+    bool rdxUsed = this->envs.top().registers.isUsed("dx");
+
+    if(r1 == "%eax"){
+        r1 = this->envs.top().getTemp(false);
+        this->program << "\tmovl %eax, " << r1 << endl;
+    }
+
+    r1 = this->envs.top().registers.secureRegister(r1, &program, false);
+
+    if(raxUsed)
+        this->program << "\tpushq %rax\t;dzielenie\n";
+    if(rdxUsed)
+        this->program << "\tpushq %rdx\n";
+    if(r2 != "%eax")
+        this->program << "\tmovl " << r2 << ", %eax\n";
+    this->program << "\tcdq\n";
+    this->program << "\tidivl " << r1 << endl;
+    string free_ = this->envs.top().getTemp(false);
+
+    this->program << "\tmovl %eax, " << free_ <<endl;
+    if(rdxUsed)
+        this->program << "\tpopq %rdx\n";
+    if(raxUsed)
+        this->program << "\tpopq %rax\n";
 
 
 }
@@ -657,7 +716,7 @@ void Compiler::visitEQU(EQU *equ)
     string r2 = envs.top().freeTemp(); // drugi
     string r1 = envs.top().freeTemp(); // pierwszy
 
-    this->program << "\ttest " << r2 << ", " << r1 << endl;
+    this->program << "\tcmpl " << r2 << ", " << r1 << endl;
 
     this->jump = "je";
 
@@ -669,7 +728,7 @@ void Compiler::visitNE(NE *ne)
     string r2 = envs.top().freeTemp(); // drugi
     string r1 = envs.top().freeTemp(); // pierwszy
 
-    this->program << "\ttest " << r2 << ", " << r1 << endl;
+    this->program << "\tcmpl " << r2 << ", " << r1 << endl;
 
     this->jump = "jne";
 
@@ -719,14 +778,15 @@ void Compiler::visitListItem(ListItem* listitem)
 
 void Compiler::visitListLatteIdent(ListLatteIdent* listlatteident)
 {
+    // Only assignment
     Ident i = listlatteident->at(0)->getIdent();
-
 
     string reg_name1 = this->envs.top().getTemp(false);
     string reg_name2 = this->envs.top().getVariable(i);
-    if(reg_name1 != reg_name2)
-        this->program << "\tmovl " << reg_name2 << ", " << reg_name1 << endl;
-
+    if(reg_name1 != reg_name2) {
+        char op = this->envs.top().registers.getOperator(reg_name2);
+        this->program << "\tmov" << op << " " << reg_name2 << ", " << reg_name1 << endl;
+    }
     for (ListLatteIdent::iterator i = listlatteident->begin() ; i != listlatteident->end() ; ++i)
     {
         (*i)->accept(this);
@@ -747,6 +807,7 @@ void Compiler::visitInteger(Integer x)
 {
     /* Code for Integer Goes Here */
     this->envs.top().registers.temps.push_back("$" + to_string(x));
+    //cout << "Temp int" << endl;
 }
 
 void Compiler::visitChar(Char x)
@@ -802,3 +863,20 @@ void Compiler::generate() {
     outFile.close();
 }
 
+string Compiler::getFunctionReturnType(string name) {
+    for(auto it = functions.begin(); it != functions.end(); ++it)
+    {
+        if((*it)->ident_ == name){
+            if((*it)->type_->getType() == "void")
+                return "";
+            if((*it)->type_->getType() == "string")
+                return "%rax";
+            return "%eax";
+        }
+    }
+    if(name == "readInt")
+        return "%eax";
+    if(name == "readString")
+        return "%rax";
+    return "";
+}

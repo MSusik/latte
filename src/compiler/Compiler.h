@@ -119,6 +119,9 @@ public:
     void addFunctionEpilogue();
 
     string jump;
+    string declared_type;
+
+    string getFunctionReturnType(string name);
 };
 
 
