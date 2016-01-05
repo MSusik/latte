@@ -16,13 +16,17 @@ Registers::Registers() {
 }
 
 
-Registers::Registers(bool sameStack, const Registers& reg) : Registers() {
+Registers::Registers(bool sameStack, const Registers& reg) : Registers() { ;
     if(sameStack)
     {
         variables_on_stack = reg.variables_on_stack;
         variables = reg.variables;
+        used = reg.used;
+        stackPointers = reg.stackPointers;
+        stackMin = reg.stackMin;
+        args = reg.args;
     }
-    used = reg.used;
+    defined_here = set<string>();
     cout << variables_on_stack.size() << " REG" << endl;
     cout << variables.size() << " Variables" << endl;
     cout << used.size() << " Used" << endl;
@@ -39,9 +43,6 @@ void Envs::addEnv(bool sameStack) {
 
     }
     CompilerEnvironment newEnv(sameStack, envs.top());
-    if(sameStack) {
-        newEnv.stackShifts = this->top().stackShifts;
-    }
 
     cout << "Adding new env" << endl;
     this->envs.push(newEnv);
@@ -59,16 +60,17 @@ string CompilerEnvironment::freeTemp() {
     return this->registers.freeTemp();
 }
 
-void CompilerEnvironment::putArg(stringstream *ss) {
+void CompilerEnvironment::putArg(stringstream& ss) {
     /// to co jest na topie
     string value = this->registers.freeTemp();
     char op = this->registers.getOperator(value);
-    string reg = this->registers.getArg(op == 'q');
-    (*ss) << "\tmov" << op << " " << value << ", " << reg <<"\n";
+    cout << op << " TYPE" << endl;
+    string reg = this->registers.getArg(op == 'q', op == 'b');
+    ss << "\tmov" << op << " " << value << ", " << reg <<"\n";
 }
 
 
-string Registers::getFree(bool pointer) {
+string Registers::getFree(short pointer) {
     string th = "";
     for(auto it = this->used.begin(); it != this->used.end(); ++it)
     {
@@ -78,13 +80,13 @@ string Registers::getFree(bool pointer) {
 
     }
     this->used[th] = true;
+    //cout << "Getting " << th << endl;
     return this->short_to_long(th, pointer);
-    //cout << "Getting " << reg_name << endl;
 }
 
 
 string Registers::getTemp(bool pointer) {
-    string reg_name = this->getFree(pointer);
+    string reg_name = this->getFree(pointer ? 1 : 0);
     //cout <<"Getting temp " << reg_name << endl;
     this->temps.push_back(reg_name);
     return reg_name;
@@ -98,8 +100,9 @@ string Registers::freeFree(string reg_name) {
     return reg_name;
 }
 
-string Registers::freeTemp() {
+string Registers::freeTemp(bool pop) {
     //cout << "free" << endl;
+
     string reg_name = this->temps.back();
     if(reg_name[0] == 'V' || reg_name[0] == '$')
     {
@@ -112,17 +115,27 @@ string Registers::freeTemp() {
         return reg_name;
     }
     reg_name = this->freeFree(reg_name);
-    this->temps.pop_back();
+    if(pop)
+        this->temps.pop_back();
     return reg_name;
 }
 
-string Registers::short_to_long(string s, bool pointer) {
-    if(pointer)
+string Registers::short_to_long(string s, short pointer) {
+    if(pointer == 1)
     {
         if(s[0] == 'r')
             return '%' + s;
         else
             return "%r" + s;
+    } else if(pointer == -1)
+    {
+        if(s[0] == 'r')
+            return '%' + s + "b";
+        else if(s[s.size() - 1] == 'x')
+            return "%" + s[0] + 'l';
+        else
+            return "%" + s + 'l';
+
     } else
     {
         if(s[0] == 'r')
@@ -135,6 +148,22 @@ string Registers::short_to_long(string s, bool pointer) {
 
 string Registers::long_to_short(string l) {
     string l2 = l.substr(2);
+
+    // konczy sie na b
+    if(l[l.size()-1] == 'b')
+        return "r" + l2.substr(0, l2.size()-1);
+
+    // konczy sie na l
+    if(l[l.size()-1] == 'l')
+    {
+        if(l[1] == 's')
+            return "si";
+        if(l[1] == 'd' && l[2] == 'i')
+            return "di";
+        return l[1] + "x";
+    }
+
+    // reszta
     if(isdigit(l2[0])){
         if(!isdigit(*(l2.end()-1))){
             return "r" + l2.substr(0, l2.size() - 1);
@@ -144,19 +173,18 @@ string Registers::long_to_short(string l) {
     return l2;
 }
 
-string Registers::getArg(bool pointer) {
+string Registers::getArg(bool pointer, bool bool_) {
     string q;
-    if(pointer){
-        q = argumentsStrings[args];
-    } else {
-        q = argumentsNumbers[args];
-    }
-    args++;
-    return "%" + q;
-}
+    if(bool_)
+        q = argumentsBool[args_called];
 
-void Registers::freeArgs() {
-    args = 0;
+    else if(pointer){
+        q = argumentsStrings[args_called];
+    } else {
+        q = argumentsNumbers[args_called];
+    }
+    args_called++;
+    return "%" + q;
 }
 
 string CompilerEnvironment::getTemp(bool pointer) {
@@ -164,7 +192,8 @@ string CompilerEnvironment::getTemp(bool pointer) {
 }
 
 void CompilerEnvironment::addVariable(string name, bool pointer) {
-    this->registers.variables.insert(make_pair(name, this->registers.getFree(pointer)));
+    this->registers.variables[name] =  this->registers.getFree(pointer ? 1 : 0);
+    this->registers.defined_here.insert(name);
 }
 
 string CompilerEnvironment::getVariable(string name) {
@@ -179,15 +208,17 @@ void CompilerEnvironment::removeVariable(string name) {
     this->registers.freeFree(name);
 }
 
-void CompilerEnvironment::addArgumentToVariables(string name, bool pointer) {
-    string r = this->registers.addArgumentToVariables(name, pointer);
+void CompilerEnvironment::addArgumentToVariables(string name, bool pointer, bool bool_) {
+    string r = this->registers.addArgumentToVariables(name, pointer, bool_);
     this->registers.variables.insert(make_pair(name, r));
 
 }
 
-string Registers::addArgumentToVariables(string name, bool pointer) {
+string Registers::addArgumentToVariables(string name, bool pointer, bool bool_) {
     string reg_name;
-    if(pointer)
+    if(bool_)
+        reg_name = this->argumentsBool[args];
+    else if(pointer)
         reg_name = this->argumentsStrings[args];
     else
         reg_name = this->argumentsNumbers[args];
@@ -200,53 +231,61 @@ string Envs::getNextLabel() {
 }
 
 void Registers::freeArguments() {
-    args=0;
 }
 
-void Registers::clearArgs(stringstream *ss) {
+void Registers::clearArgs(stringstream& ss) {
     //also remembers the temp
 
     for(auto it = this->variables.begin(); it!= this->variables.end(); ++it){
-        (*ss) << "\tpushq " << etor(it->second) << endl;
+        ss << "\tpushq " << etor(it->second) << endl;
         variables_on_stack.insert(make_pair(it->first, stackMin));
+        stackPointers.insert(make_pair(stackMin, getOperator(it->second)));
         stackMin -= 8;
     }
 
     if(temps.size()){
+
         string ft = freeTemp();
         if(ft[0] == '$')
-            (*ss) << "\tpushq " << ft << endl;
-        else
-            (*ss) << "\tpushq " << etor(ft) << endl;
+            ss << "\tpushq " << ft << endl;
+        else {
+            ss << "\tpushq " << etor(ft) << endl;
+        }
         stackMin -= 8;
         this->tempOnStack = this->getOperator(ft);
     }
-
-    args2 = args;
-    args = 0;
+    cal = true;
 }
 
-void Registers::restoreArgs(stringstream *ss) {
+void Registers::restoreArgs(stringstream& ss) {
     //also restores the temp
     if(tempOnStack) {
         stackMin += 8;
-        string temp = getTemp(tempOnStack == 'q');
-        (*ss) << "\tpopq " << etor(temp) << endl;
+        if(tempOnStack == 'b')
+        {
+            string temp = getBool();
+            ss << "\tpopq " << btor(temp) << endl;
+        }
+        else {
+            string temp = getTemp(tempOnStack == 'q');
+            ss << "\tpopq " << etor(temp) << endl;
+        }
         tempOnStack = 0;
     }
 
     for(auto it = this->variables.rbegin(); it != this->variables.rend() ; ++it)
     {
-        (*ss) << "\tpopq " << etor(it->second) << endl;
+        ss << "\tpopq " << etor(it->second) << endl;
         stackMin += 8;
     }
     variables_on_stack.clear();
-    args = args2;
-    args2 = 0;
+    stackPointers.clear();
+    cal = false;
+    args_called = 0;
 }
 
 bool Registers::calling() {
-    return args2 > 0;
+    return cal;
 }
 
 CompilerEnvironment::CompilerEnvironment() : registers(false, this->registers) {
@@ -266,25 +305,25 @@ bool Registers::isUsed(string name) {
     return used.at(name);
 }
 
+string Registers::btor(string e) {
+    return short_to_long(long_to_short(e), -1);
+}
+
 string Registers::etor(string e) {
-    return short_to_long(long_to_short(e), true);
+    return short_to_long(long_to_short(e), 1);
 }
 
 string Registers::rtoe(string r) {
-    return short_to_long(long_to_short(r), false);
+    return short_to_long(long_to_short(r), 0);
 }
 
-void Registers::addUsed(string used_) {
-    used[used_] = true;
-}
-
-string Registers::secureRegister(string value, stringstream *program, bool pointer) {
+string Registers::secureRegister(string value, stringstream& program, bool pointer) {
     string res = pointer ? "%r15" : "%r15d";
     if(value[0] == '$') {
         if(pointer)
-            (*program) << "\tmovq " << value << ", %r15\n";
+            program << "\tmovq " << value << ", %r15\n";
         else
-            (*program) << "\tmovl " << value << ", %r15d\n";
+            program << "\tmovl " << value << ", %r15d\n";
         return res;
     }
     return value;
@@ -293,5 +332,52 @@ string Registers::secureRegister(string value, stringstream *program, bool point
 char Registers::getOperator(const string &name) {
     if(name[1] == 'e' || name[name.size() - 1] == 'd' || name[0] == '$')
         return 'l';
+    if(name[name.length()-1] == 'b' || name[name.length()-1] == 'l')
+        return 'b';
+    char st = getTypeFromStack(name);
+    if(st != '0')
+    {
+        return st;
+    }
     return 'q';
+}
+
+char Registers::getTypeFromStack(const string &name) {
+    auto it = name.find('(');
+    if(it == string::npos)
+        return '0'; // not on stack
+    auto val = stoi(name.substr(0, it));
+    return stackPointers[val];
+}
+
+bool Registers::undefined(string var_name) {
+    return defined_here.find(var_name) == defined_here.end();
+}
+
+string Registers::freeBool() {
+    return this->freeTemp();
+}
+
+string Registers::getBool() {
+    string reg_name = this->getFree(-1);
+    // cout <<"Getting bool " << reg_name << endl;
+    this->temps.push_back(reg_name);
+    return reg_name;
+}
+
+bool Registers::notARegister(string name) {
+    return name[0] == '$' || name[name.size()-1] == ')';
+}
+
+string Registers::toOp(string name, short pointer) {
+    if(pointer == 1){
+        //string
+        return etor(name);
+    } else if(pointer == 0){
+        //int
+        return rtoe(name);
+    } else {
+        //bool
+        return short_to_long(long_to_short(name), -1);
+    }
 }

@@ -7,6 +7,7 @@
 
 #include<algorithm>
 #include<map>
+#include<set>
 #include<string>
 #include<stack>
 #include<sstream>
@@ -20,40 +21,55 @@ private:
     map<string, bool> used; //is register used
     vector<string> argumentsNumbers = {"edi", "esi", "edx", "ecx", "r8d", "r9d"};
     vector<string> argumentsStrings = {"rdi", "rsi", "rdx", "rcx", "r8", "r9"};
+    vector<string> argumentsBool = {"dil", "sil", "dl", "cl", "r8b", "r9b"};
     vector<string> arguments = {"di", "si", "dx", "cx", "r8", "r9"};
     int args = 0;
-    int args2 = 0;
+    int args_called = 0;
     int stackMin = -8;
+    map<int, char> stackPointers; // true if pointer
 public:
+    set<string> defined_here;
     map<string, int> variables_on_stack;
     map<string, string> variables;
     Registers();
     Registers(bool sameStack, const Registers& reg);
     string getTemp(bool pointer);
     string freeFree(string name);
-    string getFree(bool pointer);
-    string getArg(bool pointer);
-    void freeArgs();
-    string freeTemp();
-    string short_to_long(string s, bool pointer);
+    string getFree(short pointer);
+    string getArg(bool pointer, bool bool_=false);
+    string freeTemp(bool pop=true);
+    string short_to_long(string s, short pointer);
     string long_to_short(string l);
-    string addArgumentToVariables(string name, bool pointer);
+    string addArgumentToVariables(string name, bool pointer, bool bool_);
     void freeArguments();
     vector<string> temps;
     string etor(string e);
     string rtoe(string r);
-    void clearArgs(stringstream *ss);
-    void restoreArgs(stringstream *ss);
+    void clearArgs(stringstream& ss);
+    void restoreArgs(stringstream& ss);
     bool isUsed(string name);
     bool calling();
 
-    void addUsed(string used_);
-
-    string secureRegister(string value, stringstream *program, bool pointer);
+    string secureRegister(string value, stringstream& program, bool pointer);
 
     char tempOnStack = 0;
 
     char getOperator(const string &name);
+    char getTypeFromStack(const string &name);
+
+    bool cal = false;
+
+    bool undefined(string var_name);
+
+    string freeBool();
+
+    string getBool();
+
+    bool notARegister(string name);
+
+    string toOp(string name, short pointer);
+
+    string btor(string e);
 };
 
 
@@ -64,12 +80,11 @@ public:
     CompilerEnvironment(bool d, const CompilerEnvironment& ce);
 
     Registers registers;
-    map<string, int> stackShifts; // 0 if in register
-    void putArg(stringstream *ss);
+    void putArg(stringstream& ss);
     string freeTemp();
     string getTemp(bool pointer);
     void addVariable(string name, bool pointer);
-    void addArgumentToVariables(string name, bool pointer);
+    void addArgumentToVariables(string name, bool pointer, bool bool_);
     string getVariable(string name);
     void removeVariable(string name);
 };

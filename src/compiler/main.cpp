@@ -92,10 +92,11 @@ int main(int argc, char ** argv) {
     if (parse_tree)
     {
         vector<FnDef*> functions;
+        map<string, string> string_to_label;
         FunctionRetriever fr(parse_tree);
         functions = fr.getFunctions();
 
-        CorrectnessChecker type_checker(functions);
+        CorrectnessChecker type_checker(functions, string_to_label);
         type_checker.check_types();
         ErrorState error = type_checker.error;
 
@@ -109,7 +110,7 @@ int main(int argc, char ** argv) {
         else
         {
             string assembly_file_name = full_without_extension + ".s";
-            Compiler compiler(functions, assembly_file_name);
+            Compiler compiler(functions, assembly_file_name, string_to_label);
             compiler.generate();
 
             //create_stub(full_without_extension);

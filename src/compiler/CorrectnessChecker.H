@@ -20,10 +20,12 @@ private:
     stack<Environment> envs;
     string current_function_type;
     TypeFetcher typeFetcher;
+    map<string, string>& name_to_label;
 public:
-    CorrectnessChecker(vector<FnDef *> functions);
-
+    CorrectnessChecker(vector<FnDef *> functions, map<string, string>& name_to_label);
+    void add_string(string name);
     ErrorState error;
+    int last_string = 0;
 
     void visitProgram(Program* p);
     void visitTopDef(TopDef* p);

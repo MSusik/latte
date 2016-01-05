@@ -57,13 +57,16 @@ void Compiler::visitFnDef(FnDef *fndef)
     this->program << fndef->ident_ << ":" << endl;
     this->addFunctionPrologue();
     this->envs.addEnv(false);
-    /*this->env.prepare();
-    this->env.new_fun();*/
     fndef->type_->accept(this);
     visitIdent(fndef->ident_);
     fndef->listarg_->accept(this);
     fndef->block_->accept(this);
     this->envs.removeEnv();
+
+    if(fndef->type_->getType() == "void") {
+        this->program << "\tleave\n";
+        this->program << "\tret\n";
+    }
 
     //return
 
@@ -91,7 +94,7 @@ void Compiler::visitClassDefInher(ClassDefInher *classdefinher)
 void Compiler::visitAr(Ar *ar)
 {
     /* Code For Ar Goes Here */
-    envs.top().addArgumentToVariables(ar->ident_, ar->type_->getType() == "string");
+    envs.top().addArgumentToVariables(ar->ident_, ar->type_->getType() == "string", ar->type_->getType() == "boolean");
     ar->type_->accept(this);
     //visitIdent(ar->ident_);
 
@@ -120,7 +123,6 @@ void Compiler::visitFieldDef(FieldDef *fielddef)
 void Compiler::visitBlk(Blk *blk)
 {
     /* Code For Blk Goes Here */
-
     blk->liststmt_->accept(this);
 
 }
@@ -136,7 +138,9 @@ void Compiler::visitBStmt(BStmt *bstmt)
 {
     /* Code For BStmt Goes Here */
 
+    this->envs.addEnv(true);
     bstmt->block_->accept(this);
+    this->envs.removeEnv();
 
 }
 
@@ -185,16 +189,24 @@ void Compiler::visitAssObj(AssObj *assobj)
 void Compiler::visitIncr(Incr *incr)
 {
     /* Code For Incr Goes Here */
-
-    incr->listlatteident_->accept(this);
+    string ident = incr->listlatteident_->at(0)->getIdent();
+    string var = this->envs.top().getVariable(ident);
+    string temp = this->envs.top().getTemp(false);
+    program << "\tmovl " << var << ", " << temp << endl;
+    program << "\tincl " << var << endl;
+    //incr->listlatteident_->accept(this);
 
 }
 
 void Compiler::visitDecr(Decr *decr)
 {
     /* Code For Decr Goes Here */
-
-    decr->listlatteident_->accept(this);
+    string ident = decr->listlatteident_->at(0)->getIdent();
+    string var = this->envs.top().getVariable(ident);
+    string temp = this->envs.top().getTemp(false);
+    program << "\tmovl " << var << ", " << temp << endl;
+    program << "\tdecl " << var << endl;
+    //incr->listlatteident_->accept(this);
 
 }
 
@@ -207,8 +219,10 @@ void Compiler::visitRet(Ret *ret)
     // TO DO type
     string retReg = envs.top().freeTemp();
     char op = this->envs.top().registers.getOperator(retReg);
+    char reg = op == 'l' ? 'e' : 'r';
+
     if(retReg != "%eax" || retReg != "%rax")
-        this->program << "\tmov" << op << " " << retReg << ", %eax\n";
+        this->program << "\tmov" << op << " " << retReg << ", %" << reg << "ax\n";
     this->addFunctionEpilogue();
     this->program << "\tret\n";
 }
@@ -228,10 +242,15 @@ void Compiler::visitCond(Cond *cond)
     string yesLabel = this->envs.getNextLabel();
 
     cond->expr_->accept(this);
-    this->program << "\t" << jump << " " << yesLabel << endl;
+
+    string cond_ = this->envs.top().registers.freeBool();
+    this->program << "\ttest " << cond_ << ", " << cond_ << endl;
+    this->program << "\tjne " << yesLabel << endl;
     this->program << "\tjmp " << afterLabel << endl;
     this->program << yesLabel << ":\n";
+    this->envs.addEnv(true);
     cond->stmt_->accept(this);
+    this->envs.removeEnv();
     this->program << afterLabel << ":\n";
 }
 
@@ -243,12 +262,19 @@ void Compiler::visitCondElse(CondElse *condelse)
     string yesLabel = this->envs.getNextLabel();
 
     condelse->expr_->accept(this);
-    this->program << "\t" << jump << " " << yesLabel << endl;
+    string cond_ = this->envs.top().registers.freeBool();
+    this->program << "\ttest " << cond_ << ", " << cond_ << endl;
+    this->program << "\tjne " << yesLabel << endl;
 
+    this->envs.addEnv(true);
     condelse->stmt_2->accept(this);
+    this->envs.removeEnv();
     this->program << "\tjmp " << afterLabel << endl;
     this->program << yesLabel << ":\n";
+
+    this->envs.addEnv(true);
     condelse->stmt_1->accept(this);
+    this->envs.removeEnv();
 
     this->program << afterLabel << ":\n";
 
@@ -270,8 +296,9 @@ void Compiler::visitWhile(While *while_)
     this->program << conditionLabel << ":" << endl;
 
     while_->expr_->accept(this);
-    this->program << "\t" << jump << " " << blockLabel << endl;
-
+    string cond = this->envs.top().registers.freeBool();
+    this->program << "\ttest " << cond << ", " << cond << endl;
+    this->program << "\tjne " << blockLabel << endl;
 }
 
 void Compiler::visitForeach(Foreach *foreach)
@@ -290,14 +317,19 @@ void Compiler::visitSExp(SExp *sexp)
     /* Code For SExp Goes Here */
 
     sexp->expr_->accept(this);
-    // TODO this->envs.top().freeTemp(); //not used
+    if(!void_) {
+        this->envs.top().freeTemp(); //not used
+        void_ = true;
+    }
 }
 
 void Compiler::visitNoInit(NoInit *noinit)
 {
     /* Code For NoInit Goes Here */
-    this->envs.top().addVariable(noinit->ident_, declared_type == "string");
-    visitIdent(noinit->ident_);
+    if(this->envs.top().registers.undefined(noinit->ident_)) {
+        this->envs.top().addVariable(noinit->ident_, declared_type == "string");
+        visitIdent(noinit->ident_);
+    }
 
 }
 
@@ -305,8 +337,16 @@ void Compiler::visitInit(Init *init)
 {
     /* Code For Init Goes Here */
 
-    visitIdent(init->ident_);
     init->expr_->accept(this);
+    if(this->envs.top().registers.undefined(init->ident_)) {
+        this->envs.top().addVariable(init->ident_, declared_type == "string");
+    }
+    string temp = this->envs.top().freeTemp();
+    string var = this->envs.top().getVariable(init->ident_);
+    char op = this->envs.top().registers.getOperator(var);
+    if(temp != var)
+        program << "\tmov" << op << " " << temp << ", " << var << endl;
+    visitIdent(init->ident_);
 
 }
 
@@ -416,8 +456,8 @@ void Compiler::visitELitInt(ELitInt *elitint)
 void Compiler::visitELitFalse(ELitFalse *elitfalse)
 {
     /* Code For ELitFalse Goes Here */
-
-
+    string free_ = envs.top().registers.getBool();
+    program << "\txorb " << free_ << ", " << free_ << endl;
 }
 
 void Compiler::visitELitNull(ELitNull *elitnull)
@@ -430,8 +470,8 @@ void Compiler::visitELitNull(ELitNull *elitnull)
 void Compiler::visitELitTrue(ELitTrue *elittrue)
 {
     /* Code For ELitTrue Goes Here */
-
-
+    string free_ = envs.top().registers.getBool();
+    program << "\tmovb $1, " << free_ << endl;
 }
 
 void Compiler::visitEApp(EApp *eapp)
@@ -439,21 +479,21 @@ void Compiler::visitEApp(EApp *eapp)
     /* Code For EApp Goes Here */
     visitIdent(eapp->ident_);
 
-    this->envs.top().registers.clearArgs(&program);
+    this->envs.top().registers.clearArgs(program);
     eapp->listexpr_->accept(this);
 
     this->program << "\tcall " << eapp->ident_ << endl;
     this->envs.top().registers.freeArguments();
-    //Nie wolno robić takich rzeczy!
-    //this->envs.top().registers.temps.push_back("%eax");
-    //this->envs.top().registers.addUsed("ax");
     string type_  =this->getFunctionReturnType(eapp->ident_);
     if(type_.length()) {
+        void_ = false;
         char op = this->envs.top().registers.getOperator(type_);
-        string free_ = this->envs.top().getTemp(false);
+        string free_ = this->envs.top().getTemp(op == 'q');
         this->program << "\tmov" << op << " " << type_ << ", " << free_ << endl;
+    } else {
+        void_ = true;
     }
-    this->envs.top().registers.restoreArgs(&program);
+    this->envs.top().registers.restoreArgs(program);
 
 
 }
@@ -480,6 +520,18 @@ void Compiler::visitNeg(Neg *neg)
     /* Code For Neg Goes Here */
 
     neg->expr_->accept(this);
+    string free_ = envs.top().freeTemp();
+    string rr = envs.top().getTemp(false);
+    bool notAReg = envs.top().registers.notARegister(free_);
+    if(notAReg){
+
+        this->program << "\tmovl " << free_ << ", " << rr << "\n";
+        free_ = rr;
+    }
+    program << "\tnegl " << free_ << endl;
+    if(!notAReg){
+        this->program << "\tmovl " << free_ << ", " << rr << "\n";
+    }
 
 }
 
@@ -552,19 +604,33 @@ void Compiler::visitEOr(EOr *eor)
 void Compiler::visitPlus(Plus *plus)
 {
     /* Code For Plus Goes Here */
-    // TODO Strings
     string r2 = envs.top().freeTemp(); // drugi
     string r1 = envs.top().freeTemp(); // pierwszy
     char op = this->envs.top().registers.getOperator(r1);
 
-    if(op == 'l') {
+    if(op == 'l')
+    {
         string r3 = envs.top().getTemp(false);
 
         if (r1 != r3)
             this->program << "\tmovl " << r1 << ", " << r3 << endl;
         this->program << "\taddl " << r2 << ", " << r3 << endl;
-    }
+    } else
+    {
+        this->envs.top().registers.clearArgs(program);
+        if(r2 == "%rdi"){
+            this->program << "\tmovq %rdi, %r15\n";
+            r2 = "%r15";
+        }
 
+        this->program << "\tmovq " << r1 << ", %rdi\n";
+        this->program << "\tmovq " << r2 << ", %rsi\n"; // a co jeśli to jest w rdi/rsi ?
+        this->program << "\tcall GVl43xXD1cE6h6LYIjas" << endl;
+        this->envs.top().registers.restoreArgs(program);
+        string r3 = envs.top().getTemp(true);
+        this->program << "\tmovq %rax, " << r3 << endl;
+
+    }
 }
 
 void Compiler::visitMinus(Minus *minus)
@@ -597,7 +663,7 @@ void Compiler::visitTimes(Times *times)
         this->program << "\tmovl %eax, " << r1 << endl;
     }
 
-    r1 = this->envs.top().registers.secureRegister(r1, &program, false);
+    r1 = this->envs.top().registers.secureRegister(r1, program, false);
 
     if(raxUsed)
         this->program << "\tpushq %rax\t;mnozenie\n";
@@ -620,7 +686,6 @@ void Compiler::visitTimes(Times *times)
 void Compiler::visitDiv(Div *div)
 {
     /* Code For Div Goes Here */
-    cout << program.str() << endl <<endl;
     string r1 = envs.top().freeTemp(); // drugi
     string r2 = envs.top().freeTemp(); // pierwszy
 
@@ -632,7 +697,7 @@ void Compiler::visitDiv(Div *div)
         this->program << "\tmovl %eax, " << r1 << endl;
     }
 
-    r1 = this->envs.top().registers.secureRegister(r1, &program, false);
+    r1 = this->envs.top().registers.secureRegister(r1, program, false);
 
     if(raxUsed)
         this->program << "\tpushq %rax\t;dzielenie\n";
@@ -656,6 +721,36 @@ void Compiler::visitDiv(Div *div)
 void Compiler::visitMod(Mod *mod)
 {
     /* Code For Mod Goes Here */
+    /* Code For Div Goes Here */
+    string r1 = envs.top().freeTemp(); // drugi
+    string r2 = envs.top().freeTemp(); // pierwszy
+
+    bool raxUsed = this->envs.top().registers.isUsed("ax");
+    bool rdxUsed = this->envs.top().registers.isUsed("dx");
+
+    if(r1 == "%eax"){
+        r1 = this->envs.top().getTemp(false);
+        this->program << "\tmovl %eax, " << r1 << endl;
+    }
+
+    r1 = this->envs.top().registers.secureRegister(r1, program, false);
+
+    if(raxUsed)
+        this->program << "\tpushq %rax\t;dzielenie\n";
+    if(rdxUsed)
+        this->program << "\tpushq %rdx\n";
+    if(r2 != "%eax")
+        this->program << "\tmovl " << r2 << ", %eax\n";
+    this->program << "\tcdq\n";
+    this->program << "\tidivl " << r1 << endl;
+    string free_ = this->envs.top().getTemp(false);
+
+    this->program << "\tmovl %edx, " << free_ <<endl;
+    if(rdxUsed)
+        this->program << "\tpopq %rdx\n";
+    if(raxUsed)
+        this->program << "\tpopq %rax\n";
+
 
 
 }
@@ -664,23 +759,44 @@ void Compiler::visitLTH(LTH *lth)
 {
 
     /* Code For LTH Goes Here */
-    string r2 = envs.top().freeTemp(); // drugi
-    string r1 = envs.top().freeTemp(); // pierwszy
+    string r1 = envs.top().freeTemp(); // drugi
+    string r2 = envs.top().freeTemp(); // pierwszy
+
+    if(this->envs.top().registers.notARegister(r2)){
+        this->program << "\tmovl " << r2 << ", %r15d\n";
+        r2 = "%r15d";
+    }
 
     this->program << "\tcmpl " << r1 << ", " << r2 << endl;
 
-    this->jump = "jge";
+    string r3 = envs.top().registers.getBool();
+    string r4 = envs.top().registers.getBool();
+    this->program << "\tsets " << r3 << endl;
+    this->program << "\tseto " << r4 << endl;
+    this->program << "\txorb " << r4 << ", " << r3 << endl;
+    envs.top().registers.freeBool();
 }
 
 void Compiler::visitLE(LE *le)
 {
     /* Code For LE Goes Here */
-    string r2 = envs.top().freeTemp(); // drugi
-    string r1 = envs.top().freeTemp(); // pierwszy
+    string r1 = envs.top().freeTemp(); // drugi
+    string r2 = envs.top().freeTemp(); // pierwszy
 
-    this->program << "\tcmpl " << r1 << ", " << r2 << endl;
+    if(this->envs.top().registers.notARegister(r1)){
+        this->program << "\tmovl " << r1 << ", %r15d\n";
+        r1 = "%r15d";
+    }
 
-    this->jump = "jg";
+    this->program << "\tcmpl " << r2 << ", " << r1 << endl;
+
+    string r3 = envs.top().registers.getBool();
+    string r4 = envs.top().registers.getBool();
+    this->program << "\tsets " << r3 << endl;
+    this->program << "\tseto " << r4 << endl;
+    this->program << "\txorb " << r4 << ", " << r3 << endl;
+    this->program << "\tsetzb " << r3 << endl;
+    envs.top().registers.freeBool();
 }
 
 void Compiler::visitGTH(GTH *gth)
@@ -688,12 +804,22 @@ void Compiler::visitGTH(GTH *gth)
     /* Code For GTH Goes Here */
     // n > 0 na szczycie 0
 
-    string r2 = envs.top().freeTemp(); // drugi
-    string r1 = envs.top().freeTemp(); // pierwszy
+    string r1 = envs.top().freeTemp(); // drugi
+    string r2 = envs.top().freeTemp(); // pierwszy
+
+    if(this->envs.top().registers.notARegister(r1)){
+        this->program << "\tmovl " << r1 << ", %r15d\n";
+        r1 = "%r15d";
+    }
 
     this->program << "\tcmpl " << r2 << ", " << r1 << endl;
 
-    this->jump = "jg";
+    string r3 = envs.top().registers.getBool();
+    string r4 = envs.top().registers.getBool();
+    this->program << "\tsets " << r3 << endl;
+    this->program << "\tseto " << r4 << endl;
+    this->program << "\txorb " << r4 << ", " << r3 << endl;
+    envs.top().registers.freeBool();
 
 }
 
@@ -701,12 +827,23 @@ void Compiler::visitGE(GE *ge)
 {
     /* Code For GE Goes Here */
 
-    string r2 = envs.top().freeTemp(); // drugi
-    string r1 = envs.top().freeTemp(); // pierwszy
+    string r1 = envs.top().freeTemp(); // drugi
+    string r2 = envs.top().freeTemp(); // pierwszy
 
-    this->program << "\tcmpl " << r2 << ", " << r1 << endl;
+    if(this->envs.top().registers.notARegister(r2)){
+        this->program << "\tmovl " << r2 << ", %r15d\n";
+        r2 = "%r15d";
+    }
 
-    this->jump = "jge";
+    this->program << "\tcmpl " << r1 << ", " << r2 << endl;
+
+    string r3 = envs.top().registers.getBool();
+    string r4 = envs.top().registers.getBool();
+    this->program << "\tsets " << r3 << endl;
+    this->program << "\tseto " << r4 << endl;
+    this->program << "\txorb " << r4 << ", " << r3 << endl;
+    this->program << "\tsetzb " << r3 << endl;
+    envs.top().registers.freeBool();
 
 }
 
@@ -716,9 +853,19 @@ void Compiler::visitEQU(EQU *equ)
     string r2 = envs.top().freeTemp(); // drugi
     string r1 = envs.top().freeTemp(); // pierwszy
 
-    this->program << "\tcmpl " << r2 << ", " << r1 << endl;
+    if(this->envs.top().registers.notARegister(r1)){
+        char op = this->envs.top().registers.getOperator(r1);
+        string nr1 = envs.top().registers.toOp(r1, op);
+        this->program << "\tmov" << op << " " << r1 << ", " << nr1 << "\n";
+        r1 = nr1;
+    }
 
-    this->jump = "je";
+    char op = this->envs.top().registers.getOperator(r1);
+
+    this->program << "\tcmp" << op << " " << r2 << ", " << r1 << endl;
+
+    string r3 = envs.top().registers.getBool();
+    this->program << "\tsetz " << r3 << endl;
 
 }
 
@@ -728,10 +875,21 @@ void Compiler::visitNE(NE *ne)
     string r2 = envs.top().freeTemp(); // drugi
     string r1 = envs.top().freeTemp(); // pierwszy
 
-    this->program << "\tcmpl " << r2 << ", " << r1 << endl;
+    if(this->envs.top().registers.notARegister(r1)){
+        char op = this->envs.top().registers.getOperator(r1);
+        string nr1 = envs.top().registers.toOp(r1, op);
+        this->program << "\tmov" << op << " " << r1 << ", " << nr1 << "\n";
+        r1 = nr1;
+    }
 
-    this->jump = "jne";
+    char op = this->envs.top().registers.getOperator(r1);
 
+    this->program << "\tcmp" << op << " " << r2 << ", " << r1 << endl;;
+
+
+    string r3 = envs.top().registers.getBool();
+    this->program << "\tsetz " << r3 << endl;
+    this->program << "\tnotb " << r3 << endl;
 }
 
 
@@ -798,7 +956,7 @@ void Compiler::visitListExpr(ListExpr* listexpr)
     for (ListExpr::iterator i = listexpr->begin() ; i != listexpr->end() ; ++i)
     {
         (*i)->accept(this);
-        this->envs.top().putArg(&program);
+        this->envs.top().putArg(program);
     }
 }
 
@@ -822,6 +980,9 @@ void Compiler::visitDouble(Double x)
 
 void Compiler::visitString(String x)
 {
+    string temp = this->envs.top().getTemp(true);
+    string label = this->string_to_label.at(x);
+    program << "\tmovq $" << label << ", " << temp << endl;
     /* Code for String Goes Here */
 }
 
@@ -831,7 +992,14 @@ void Compiler::visitIdent(Ident x)
 }
 
 
-Compiler::Compiler(std::vector<FnDef *> functions, std::string assembly_file) : assembly_file(assembly_file) {
+Compiler::Compiler(std::vector<FnDef *> functions, std::string assembly_file,
+                   map<string, string> string_to_label) : assembly_file(assembly_file), string_to_label(string_to_label) {
+
+    this->program << "\t.section .rodata\n";
+    for(auto it = string_to_label.begin(); it != string_to_label.end(); ++it){
+        program << it->second << ":\n";
+        program << "\t.string \"" << it->first << "\"\n";
+    }
 
     int main_index = 0;
     for(auto it = 0; it != functions.end() - functions.begin(); ++it)

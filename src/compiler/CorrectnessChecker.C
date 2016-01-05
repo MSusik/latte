@@ -548,7 +548,7 @@ void CorrectnessChecker::visitEInstanceApp(EInstanceApp *einstanceapp)
 void CorrectnessChecker::visitEString(EString *estring)
 {
     /* Code For EString Goes Here */
-
+    this->
     visitString(estring->string_);
 
 }
@@ -809,6 +809,7 @@ void CorrectnessChecker::visitDouble(Double x)
 void CorrectnessChecker::visitString(String x)
 {
     /* Code for String Goes Here */
+    add_string(x);
 }
 
 void CorrectnessChecker::visitIdent(Ident x)
@@ -817,7 +818,7 @@ void CorrectnessChecker::visitIdent(Ident x)
 }
 
 
-CorrectnessChecker::CorrectnessChecker(vector<FnDef*> functions) : functions(functions)
+CorrectnessChecker::CorrectnessChecker(vector<FnDef*> functions, map<string, string>& name_to_label) : functions(functions), name_to_label(name_to_label)
 {}
 
 void CorrectnessChecker::check_types() {
@@ -849,3 +850,10 @@ void CorrectnessChecker::check_types() {
     }
 }
 
+void CorrectnessChecker::add_string(string name) {
+    if(name_to_label.find(name) == name_to_label.end()){
+        name_to_label.insert(make_pair(name, "S" + to_string(this->last_string)));
+        last_string++;
+    }
+
+}

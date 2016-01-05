@@ -19,9 +19,10 @@ private:
     vector<FnDef*> functions;
     string assembly_file;
     stringstream program;
+    map<string, string> string_to_label;
     Envs envs;
 public:
-    Compiler(vector<FnDef *> functions, string assembly_file);
+    Compiler(vector<FnDef *> functions, string assembly_file, map<string, string> string_to_label);
 
     void visitProgram(Program* p);
     void visitTopDef(TopDef* p);
@@ -118,10 +119,11 @@ public:
 
     void addFunctionEpilogue();
 
-    string jump;
     string declared_type;
 
     string getFunctionReturnType(string name);
+
+    bool void_ = true;
 };
 
 
